@@ -9,10 +9,6 @@ const tagsRoutes = require('./routes/tags');
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
 app.use('/api/auth', authRoutes);
 app.use('/api/tareas', tasksRoutes);
 app.use('/api/categorias', categoriesRoutes);

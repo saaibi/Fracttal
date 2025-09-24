@@ -1,4 +1,4 @@
-# Full-Stack Todo App
+# Full-Stack Fracttal
 
 This is a full-stack todo list application built with React (with Vite and Redux), Node.js, and PostgreSQL.
 
@@ -16,7 +16,6 @@ This project is configured to run with Docker Compose.
 
     -   Frontend: [http://localhost](http://localhost)
     -   Backend: [http://localhost:3001](http://localhost:3001)
-    -   pgAdmin: [http://localhost:5050](http://localhost:5050) (Email: `admin@admin.com`, Password: `admin`)
 
 3.  **To stop the services:**
 
@@ -38,10 +37,10 @@ This project is configured to run with Docker Compose.
     ```
 3.  Create a `.env` file in the root directory and add the following environment variables:
     ```
-    DB_USER=FRACTAL_USER
+    DB_USER=fracttal_user
     DB_HOST=localhost
-    DB_DATABASE=FRACTAL_DB
-    DB_PASSWORD=FRACTAL_PASSWORD
+    DB_DATABASE=fracttal_db
+    DB_PASSWORD=fracttal_password
     DB_PORT=5432
     JWT_SECRET=supersecret
     ```
