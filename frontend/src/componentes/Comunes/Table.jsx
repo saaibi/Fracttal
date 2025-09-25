@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import styled from 'styled-components';
-import Button from './Button'; 
+import Button from './Button';
 
 const TableWrapper = styled.div`
   overflow-x: auto;
@@ -25,6 +25,30 @@ const StyledTable = styled.table`
     background-color: ${(props) => props.theme.colors.primary};
     color: white;
     font-weight: bold;
+    cursor: pointer;
+
+    .sort-arrow {
+      display: inline-flex;
+      flex-direction: column;
+      margin-left: 5px;
+      float: right;
+    }
+    .sort-arrow::before,
+    .sort-arrow::after {
+      content: "▲";
+      font-size: 0.8em;
+      line-height: 0.7;
+      opacity: 0.3;
+    }
+    .sort-arrow::after {
+      content: "▼";
+    }
+    .sort-arrow.asc::before {
+      opacity: 1;
+    }
+    .sort-arrow.desc::after {
+      opacity: 1;
+    }
   }
 
   tr:nth-child(even) {
@@ -53,11 +77,42 @@ const PageButton = styled(Button)`
   }
 `;
 
-const Table = ({ headers, data, renderRow, currentPage, itemsPerPage, totalItems, onPageChange}) => {
+const Table = ({ headers, data, renderRow, currentPage, itemsPerPage, totalItems, onPageChange, headerToKey }) => {
+  const [sortColumn, setSortColumn] = useState(null);
+  const [sortDirection, setSortDirection] = useState('asc');
+
+  const handleSort = (column) => {
+    if (headers && headers.includes(column)) {
+      if (sortColumn === column) {
+        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      } else {
+        setSortColumn(column);
+        setSortDirection('asc');
+      }
+    }
+  };
+
+  const sortedData = useMemo(() => {
+    const sorted = [...data];
+    if (sortColumn && headerToKey) {
+      const key = headerToKey[sortColumn];
+      if (key) {
+        sorted.sort((a, b) => {
+          const aValue = a[key];
+          const bValue = b[key];
+          if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+          if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+          return 0;
+        });
+      }
+    }
+    return sorted;
+  }, [data, sortColumn, sortDirection, headerToKey]);
+
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentData = data.slice(startIndex, endIndex);
+  const currentData = sortedData.slice(startIndex, endIndex);
 
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
@@ -70,7 +125,12 @@ const Table = ({ headers, data, renderRow, currentPage, itemsPerPage, totalItems
         <thead>
           <tr>
             {headers.map((header, index) => (
-              <th key={index}>{header}</th>
+              <th key={index} onClick={() => handleSort(header)}>
+                {header}
+                {header !== 'Acciones' && (
+                  <span className={`sort-arrow ${sortColumn === header ? sortDirection : ''}`}></span>
+                )}
+              </th>
             ))}
           </tr>
         </thead>

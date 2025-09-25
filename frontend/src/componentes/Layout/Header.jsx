@@ -7,7 +7,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 const HeaderContainer = styled.header`
   background-color: ${({theme}) => theme.colors.primary};
-  color: ${({theme}) => theme.colors.text};
+  color: white;
   padding: 1rem;
   display: flex;
   justify-content: space-between;
@@ -32,7 +32,7 @@ const Nav = styled.nav`
   }
 
   a {
-    color: ${({theme}) => theme.colors.text};
+    color: white;
     text-decoration: none;
     &:hover {
       text-decoration: underline;

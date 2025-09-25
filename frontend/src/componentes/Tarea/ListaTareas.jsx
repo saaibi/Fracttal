@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import moment from 'moment';
 import { useTareas } from '../../hooks/useTareas';
 import Table from '../Comunes/Table';
 import Button from '../Comunes/Button';
@@ -31,7 +32,6 @@ const ListaTareas = () => {
   const handleCloseModal = () => {
     setTaskToEdit(null);
     setIsModalOpen(false);
-    fetchTasks();
   };
 
   const handleDelete = (id) => {
@@ -57,15 +57,26 @@ const ListaTareas = () => {
     setCurrentPage(page);
   };
 
-  const taskHeaders = ['ID', 'Título', 'Descripción', 'Fecha Vencimiento', 'Prioridad', 'Completada', 'Categoria', 'Etiquetas', 'Acciones'];
   const setPrioridad = id => ({ 1: "Baja", 2: "Media", 3: "Alta", }[id] || '');
+
+  const taskHeaders = ['ID', 'Título', 'Descripción', 'Fecha Vencimiento', 'Prioridad', 'Completada', 'Categoria', 'Etiquetas', 'Acciones'];
+  const headerToKey = {
+    'ID': 'id',
+    'Título': 'titulo',
+    'Descripción': 'descripcion',
+    'Fecha Vencimiento': 'fecha_vencimiento',
+    'Prioridad': 'prioridad',
+    'Completada': 'completada',
+    'Categoria': 'categoria_nombre',
+    'Etiquetas': 'etiquetas',
+  };
 
   const renderTaskRow = (task) => (
     <tr key={task.id}>
       <td>{task.id}</td>
       <td>{task.titulo}</td>
       <td>{task.descripcion}</td>
-      <td>{task.fecha_vencimiento}</td>
+      <td>{moment(task.fecha_vencimiento).format('DD/MM/YYYY')}</td>
       <td>{setPrioridad(task.prioridad)}</td>
       <td>{task.completada ? 'Sí' : 'No'}</td>
       <td>{task.categoria_nombre}</td>
@@ -98,10 +109,17 @@ const ListaTareas = () => {
         itemsPerPage={itemsPerPage}
         totalItems={tasks.length}
         onPageChange={handlePageChange}
+        headerToKey={headerToKey}
       />
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal} title={taskToEdit ? "Editar Tarea" : "Crear Tarea"}>
-        <FormularioTarea initialData={taskToEdit ? taskToEdit : {}} onSave={handleCloseModal} isNewTask={!taskToEdit} />
+        <FormularioTarea
+          initialData={taskToEdit ? taskToEdit : {}}
+          onSave={() => {
+            handleCloseModal();
+            fetchTasks();
+          }}
+          isNewTask={!taskToEdit} />
       </Modal>
 
       <ConfirmAlert
