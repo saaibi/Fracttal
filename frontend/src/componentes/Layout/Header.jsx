@@ -1,12 +1,13 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { NavLink } from 'react-router-dom';
 import styled, { ThemeContext } from 'styled-components';
 import { darkTheme, lightTheme } from '../../theme';
-import { useContext } from 'react';
 import { useAuth } from '../../hooks/useAuth';
+import Modal from '../Comunes/Modal';
+import Button from '../Comunes/Button';
 
 const HeaderContainer = styled.header`
-  background-color: ${({theme}) => theme.colors.primary};
+  background-color: ${({ theme }) => theme.colors.primary};
   color: white;
   padding: 1rem;
   display: flex;
@@ -20,23 +21,58 @@ const HeaderContainer = styled.header`
 `;
 
 const Nav = styled.nav`
-  ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-  }
+  flex: 1;
+  display: flex;
+  justify-content: center;
+`;
+
+const NavLinks = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.cardBackground};
+  border-radius: 4px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 
   li {
-    margin-left: 1rem;
+    margin: 0 0.5rem;
   }
 
   a {
-    color: white;
+    color: ${({ theme }) => theme.colors.text};
     text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+
     &:hover {
-      text-decoration: underline;
+      background-color: ${({ theme }) => theme.colors.primary};
+      color: white;
+      text-decoration: none;
     }
+
+    &.active {
+      background-color: ${({ theme }) => theme.colors.primary};
+      color: white;
+    }
+  }
+`;
+
+const HeaderActions = styled.div`
+  display: flex;
+  align-items: center;
+  
+  ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  li {
+    margin-left: 1rem;
   }
 `;
 
@@ -45,42 +81,70 @@ const ThemeToggleButton = styled.button`
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: ${({theme}) => theme.colors.text};
+  color: white;
   margin-left: 1rem;
 
   &:hover {
-    color: ${({theme}) => theme.colors.text};
+    color: ${({ theme }) => theme.colors.warning};
   }
 `;
 
+const UserInfo = styled.div`
+  padding: 1rem;
+  text-align: center;
 
-const Header = ({setTheme}) => {
-   const { logout } = useAuth();
+  p {
+    margin: 0.5rem 0;
+  }
+`;
+
+const Header = ({ setTheme }) => {
+  const { user, logout } = useAuth();
+  const [modalOpen, setModalOpen] = useState(false);
+  const themeContext = useContext(ThemeContext);
+  const isDarkTheme = themeContext.id === 'dark';
 
   const handleLogout = () => {
     logout();
+    setModalOpen(false);
   };
-
-  const themeContext = useContext(ThemeContext)
-  const isDarkTheme = themeContext.id === 'dark';
 
   return (
     <HeaderContainer>
       <h1>Fracttal App</h1>
       <Nav>
+        <NavLinks>
+          <li><NavLink to="/" end className={({ isActive }) => isActive ? "active" : ""}>Tareas</NavLink></li>
+          <li><NavLink to="/categorias" className={({ isActive }) => isActive ? "active" : ""}>Categorias</NavLink></li>
+          <li><NavLink to="/tags" className={({ isActive }) => isActive ? "active" : ""}>Etiquetas</NavLink></li>
+        </NavLinks>
+      </Nav>
+      <HeaderActions>
         <ul>
-          <li><Link to="/">Tareas</Link></li>
-          <li><Link to="/categorias">Categorias</Link></li>
-          <li><Link to="/tags">Etiquetas</Link></li>
-           <li>
+          <li>
             <ThemeToggleButton onClick={() => setTheme(isDarkTheme ? lightTheme : darkTheme)}>
-              {isDarkTheme ? '☀️' : '🌙'} 
+              {isDarkTheme ? '☀️' : '🌙'}
             </ThemeToggleButton>
           </li>
-          <li><ThemeToggleButton>👤</ThemeToggleButton></li>
-           <li><ThemeToggleButton onClick={handleLogout}>➜🚪</ThemeToggleButton></li> 
+          <li>
+            <ThemeToggleButton onClick={() => setModalOpen(true)}>
+              👤
+            </ThemeToggleButton>
+          </li>
+          <li>
+            <ThemeToggleButton onClick={handleLogout}>➜🚪</ThemeToggleButton>
+          </li>
         </ul>
-      </Nav>
+      </HeaderActions>
+      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="User Information">
+        {user && (
+          <UserInfo>
+            <p><strong>Name:</strong> {user.nombre}</p>
+            <p><strong>Email:</strong> {user.email}</p>
+            <Button onClick={handleLogout}>Logout</Button>
+          </UserInfo>
+        )}
+      </Modal>
     </HeaderContainer>
   );
 };

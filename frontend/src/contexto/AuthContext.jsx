@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import api from '../servicios/api';
 
 const AuthContext = createContext(null);
@@ -9,16 +9,27 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const logout = useCallback(() => {
+    setToken(null);
+    setUser(null);
+    localStorage.removeItem('token');
+  }, []);
+
+  const getProfile = useCallback(async () => {
+    try {
+      const response = await api.get('/auth/perfil');
+      setUser(response.data);
+    } catch (error) {
+      console.error('Failed to fetch profile', error);
+      logout();
+    }
+  }, [logout]);
+
   useEffect(() => {
     if (token) {
-      // Optionally, validate token or fetch user data here
-      // For now, we'll just assume the token is valid if it exists
-      // In a real app, you'd decode the token or make an API call to get user info
-      // For simplicity, we'll set a dummy user if token exists
-      console.log(token)
-      setUser({ username: 'Authenticated User' });
+      getProfile();
     }
-  }, [token]);
+  }, [token, getProfile]);
 
   const login = async (credentials) => {
     setIsLoading(true);
@@ -28,7 +39,7 @@ export const AuthProvider = ({ children }) => {
       const { token } = response.data;
       localStorage.setItem('token', token);
       setToken(token);
-      setUser({ username: 'Authenticated User' }); // Replace with actual user data from response
+      await getProfile();
       setIsLoading(false);
       return true;
     } catch (err) {
@@ -42,9 +53,7 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await api.post('/auth/registro', userData);
-      console.log(response)
-      // Assuming registration might directly log in the user or just succeed
+      await api.post('/auth/registro', userData);
       setIsLoading(false);
       return true;
     } catch (err) {
@@ -52,12 +61,6 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(false);
       return false;
     }
-  };
-
-  const logout = () => {
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem('token');
   };
 
   const value = {
@@ -68,6 +71,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    getProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
