@@ -1,14 +1,10 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchCategories } from '../store/slices/categoriesSlice';
+import { useContext } from 'react';
+import { CategoryContext } from '../contexto/CategoryContext';
 
 export const useCategorias = () => {
-  const dispatch = useDispatch();
-  const { categories, isLoading, error } = useSelector((state) => state.categories);
-
-  useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
-
-  return { categories, isLoading, error };
+  const context = useContext(CategoryContext);
+  if (context === undefined) {
+    throw new Error('useCategorias must be used within a CategoryProvider');
+  }
+  return context;
 };

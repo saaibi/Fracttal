@@ -1,13 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { logout } from '../../store/slices/authSlice';
+import { useAuth } from '../../hooks/useAuth'; // Changed import path
 
 const Sidebar = () => {
-  const dispatch = useDispatch();
+  const { logout } = useAuth();
 
   const handleLogout = () => {
-    dispatch(logout());
+    logout();
   };
 
   return (

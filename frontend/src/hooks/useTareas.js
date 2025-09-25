@@ -1,14 +1,10 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchTasks } from '../store/slices/tasksSlice';
+import { useContext } from 'react';
+import { TaskContext } from '../contexto/TaskContext';
 
-export const useTareas = (filters) => {
-  const dispatch = useDispatch();
-  const { tasks, isLoading, error } = useSelector((state) => state.tasks);
-
-  useEffect(() => {
-    dispatch(fetchTasks(filters));
-  }, [dispatch, filters]);
-
-  return { tasks, isLoading, error };
+export const useTareas = () => {
+  const context = useContext(TaskContext);
+  if (context === undefined) {
+    throw new Error('useTareas must be used within a TaskProvider');
+  }
+  return context;
 };

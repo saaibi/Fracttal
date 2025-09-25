@@ -1,23 +1,21 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchCategories, deleteCategory } from '../../store/slices/categoriesSlice';
+import { useCategorias } from '../../hooks/useCategorias'; // Changed import path
 
 const ListaCategorias = () => {
-  const dispatch = useDispatch();
-  const { categories, isLoading, error } = useSelector((state) => state.categories);
+  const { categories, isLoading, error, fetchCategories, deleteCategory } = useCategorias();
 
   useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
+    fetchCategories();
+  }, []); // Empty dependency array as fetchCategories is stable from context
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this category?')) {
-      dispatch(deleteCategory(id));
+      await deleteCategory(id);
     }
   };
 
   if (isLoading) return <p>Cargando categorías...</p>;
-  if (error) return <p style={{ color: 'red' }}>Error: {error.message}</p>;
+  if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
 
   return (
     <div>

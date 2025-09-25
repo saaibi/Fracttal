@@ -1,17 +1,22 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { addTask } from '../../store/slices/tasksSlice';
+import React, { useEffect } from 'react';
+import { useTareas } from '../../hooks/useTareas'; // Changed import path
 
 const ListaTareas = () => {
-  const tasks = useSelector((state) => state.tasks.tasks);
-  const dispatch = useDispatch();
+  const { tasks, fetchTasks, addTask, isLoading, error } = useTareas();
 
-  const handleAddTask = () => {
-    const taskName = prompt("Enter task name:");
-    if (taskName) {
-      dispatch(addTask({ id: Date.now(), name: taskName }));
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
+  const handleAddTask = async () => {
+    const taskTitle = prompt("Enter task title:");
+    if (taskTitle) {
+      await addTask({ titulo: taskTitle });
     }
   };
+
+  if (isLoading) return <p>Cargando tareas...</p>;
+  if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
 
   return (
     <div>
@@ -19,7 +24,7 @@ const ListaTareas = () => {
       <button onClick={handleAddTask}>Add Task</button>
       <ul>
         {tasks.map((task) => (
-          <li key={task.id}>{task.name}</li>
+          <li key={task.id}>{task.titulo}</li>
         ))}
       </ul>
     </div>

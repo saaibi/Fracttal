@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '../../store/slices/authSlice';
+import { useAuth } from '../../hooks/useAuth'; // Changed import path
 
 const FormularioRegistro = () => {
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const dispatch = useDispatch();
-  const { isLoading, error } = useSelector((state) => state.auth);
+  const { register, isLoading, error } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(registerUser({ nombre, email, password }));
+    await register({ nombre, email, password });
   };
 
   return (
@@ -33,7 +31,7 @@ const FormularioRegistro = () => {
         <button type="submit" disabled={isLoading}>Registrar</button>
       </form>
       {isLoading && <p>Cargando...</p>}
-      {error && <p style={{ color: 'red' }}>{error.message}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 };

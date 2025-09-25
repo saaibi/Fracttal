@@ -1,6 +1,6 @@
 # Full-Stack Fracttal
 
-This is a full-stack todo list application built with React (with Vite and Redux), Node.js, and PostgreSQL.
+This is a full-stack Fracttal application built with React (with Vite and Redux), Node.js, and PostgreSQL.
 
 ## Project Setup with Docker
 
@@ -14,8 +14,8 @@ This project is configured to run with Docker Compose.
 
 2.  **Access the application:**
 
-    -   Frontend: [http://localhost](http://localhost)
-    -   Backend: [http://localhost:3001](http://localhost:3001)
+    -   Frontend: [http://localhost:8070](http://localhost:8070)
+    -   Backend: [http://localhost:3000](http://localhost:3000)
 
 3.  **To stop the services:**
 

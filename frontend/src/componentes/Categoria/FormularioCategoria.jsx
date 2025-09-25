@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { createCategory, updateCategory } from '../../store/slices/categoriesSlice';
+import { useCategorias } from '../../hooks/useCategorias'; // Changed import path
 
 const FormularioCategoria = ({ initialData = {}, onSave }) => {
   const [nombre, setNombre] = useState(initialData.nombre || '');
-  const dispatch = useDispatch();
-  const { isLoading } = useSelector((state) => state.categories);
+  const { createCategory, updateCategory, isLoading } = useCategorias();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (initialData.id) {
-      dispatch(updateCategory({ id: initialData.id, categoryData: { nombre } }));
+      await updateCategory(initialData.id, { nombre });
     } else {
-      dispatch(createCategory({ nombre }));
+      await createCategory({ nombre });
     }
     onSave();
   };

@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../../store/slices/authSlice';
+import { useAuth } from '../../hooks/useAuth'; // Changed import path
 
 const FormularioLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const dispatch = useDispatch();
-  const { isLoading, error } = useSelector((state) => state.auth);
+  const { login, isLoading, error } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(loginUser({ email, password }));
+    await login({ email, password });
   };
 
   return (
@@ -28,7 +26,7 @@ const FormularioLogin = () => {
         <button type="submit" disabled={isLoading}>Login</button>
       </form>
       {isLoading && <p>Cargando...</p>}
-      {error && <p style={{ color: 'red' }}>{error.message}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 };

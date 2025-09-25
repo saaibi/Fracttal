@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors'); 
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -6,6 +7,12 @@ const authRoutes = require('./routes/auth');
 const tasksRoutes = require('./routes/tasks');
 const categoriesRoutes = require('./routes/categories');
 const tagsRoutes = require('./routes/tags');
+
+// Configure CORS
+app.use(cors({
+  origin: 'http://localhost:8070', 
+  credentials: true, 
+}));
 
 app.use(express.json());
 

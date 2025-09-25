@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import Layout from './componentes/Layout/Layout';
 import FormularioLogin from './componentes/Auth/FormularioLogin';
 import FormularioRegistro from './componentes/Auth/FormularioRegistro';
 import ListaTareas from './componentes/Tarea/ListaTareas';
 import ListaCategorias from './componentes/Categoria/ListaCategorias';
+import { useAuth } from './hooks/useAuth'; // Changed import path
 
 const PrivateRoute = ({ children }) => {
-  const { token } = useSelector((state) => state.auth);
+  const { token } = useAuth();
   return token ? children : <Navigate to="/login" />;
 };
 
@@ -17,7 +17,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<FormularioLogin />} />
-        <Route path="/registro" element={<FormularioRegistro />} />
+        <Route path="/register" element={<FormularioRegistro />} />
         <Route
           path="/"
           element={
