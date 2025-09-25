@@ -7,6 +7,7 @@ export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [onFilterChange, setOnFilterChange] = useState(null);
 
   const fetchTasks = async (filters = {}) => {
     setIsLoading(true);
@@ -94,6 +95,8 @@ export const TaskProvider = ({ children }) => {
     updateTask,
     deleteTask,
     completeTask,
+    onFilterChange,
+    setOnFilterChange,
   };
 
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;

@@ -29,6 +29,14 @@ const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
     fetchTags();
   }, []);
 
+    useEffect(() => {
+    if (initialData.etiquetas && typeof initialData.etiquetas === 'string' && tags.length > 0) {
+      const initialTagNames = initialData.etiquetas.split(', ').map(name => name.trim());
+      const tagIds = tags.filter(tag => initialTagNames.includes(tag.nombre)).map(tag => tag.id);
+      setSelectedTags(tagIds);
+    }
+  }, [initialData.etiquetas, tags]);
+
   const handleDateChange = (e) => {
     const selectedDate = e.target.value;
     if (selectedDate < today) {
@@ -109,7 +117,7 @@ const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
           ))}
         </select>
       </FormGroup>
-       {isNewTask && <FormGroup>
+      <FormGroup>
         <label>Etiquetas:</label>
         <select multiple={true} value={selectedTags} onChange={handleTagChange}>
           {tags.map((tag) => (
@@ -118,7 +126,7 @@ const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
             </option>
           ))}
         </select>
-      </FormGroup>}
+      </FormGroup>
       <Button type="submit" disabled={isLoading || !!errorFecha}>
         {initialData.id ? 'Actualizar Tarea' : 'Crear Tarea'}
       </Button>

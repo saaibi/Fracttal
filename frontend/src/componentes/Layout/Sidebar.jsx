@@ -1,13 +1,22 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import FiltroTareas from '../Tarea/FiltroTareas';
+import { useTareas } from '../../hooks/useTareas';
 
 const Aside = styled.aside`
-  width: 200px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 250px;
   padding: 20px;
   background-color: ${({theme}) => theme.colors.cardBackground};
   border-right: 1px solid ${({theme}) => theme.colors.cardBorder};
   color: ${({theme}) => theme.colors.text};
+  transition: transform 0.3s ease-in-out;
+  transform: ${({ isOpen }) => (isOpen ? 'translateX(0)' : 'translateX(-100%)')};
+  z-index: 100;
+  overflow-y: auto;
 
   ul {
     list-style: none;
@@ -28,17 +37,12 @@ const Aside = styled.aside`
   }
 `;
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen }) => {
+  const { onFilterChange } = useTareas();
 
   return (
-    <Aside>
-      <nav>
-        <ul>
-          <li><Link to="/">Tasks</Link></li>
-          <li><Link to="/categorias">Categories</Link></li>
-          <li><Link to="/tags">Tags</Link></li>
-        </ul>
-      </nav>
+    <Aside isOpen={isOpen}>
+      {<FiltroTareas onFilterChange={onFilterChange} />}
     </Aside>
   );
 };

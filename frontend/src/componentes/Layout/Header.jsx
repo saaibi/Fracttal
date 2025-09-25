@@ -5,6 +5,7 @@ import { darkTheme, lightTheme } from '../../theme';
 import { useAuth } from '../../hooks/useAuth';
 import Modal from '../Comunes/Modal';
 import Button from '../Comunes/Button';
+import ThemeToggleButton from '../Comunes/ThemeToggleButton';
 
 const HeaderContainer = styled.header`
   background-color: ${({ theme }) => theme.colors.primary};
@@ -13,6 +14,7 @@ const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 300;
 
   h1 {
     margin: 0;
@@ -76,18 +78,6 @@ const HeaderActions = styled.div`
   }
 `;
 
-const ThemeToggleButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: white;
-  margin-left: 1rem;
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.warning};
-  }
-`;
 
 const UserInfo = styled.div`
   padding: 1rem;

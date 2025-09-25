@@ -14,8 +14,8 @@ const Container = styled.div`
   max-width: 100%;
   margin: 0 auto;
   font-family: sans-serif;
-  background-color: ${({theme}) => theme.colors.cardBackground};
-  color: ${({theme}) => theme.colors.text};
+  background-color: ${({ theme }) => theme.colors.cardBackground};
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const CenteredContent = styled.div`
@@ -32,6 +32,7 @@ const PrivateRoute = ({ children }) => {
 
 function App() {
   const [theme, setTheme] = useState(lightTheme);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <ThemeProvider theme={theme}>
@@ -58,8 +59,8 @@ function App() {
               path="/"
               element={
                 <PrivateRoute>
-                  <Layout setTheme={setTheme}>
-                    <ListaTareas />
+                  <Layout setTheme={setTheme} isSidebarOpen={isSidebarOpen}>
+                    <ListaTareas toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} />
                   </Layout>
                 </PrivateRoute>
               }

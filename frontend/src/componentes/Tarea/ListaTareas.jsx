@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import moment from 'moment';
 import { useTareas } from '../../hooks/useTareas';
 import Table from '../Comunes/Table';
@@ -11,8 +11,9 @@ import ConfirmAlert from '../Comunes/ConfirmAlert';
 import Chip from '../Comunes/Chip';
 import FormularioTarea from './FormularioTarea';
 import DetalleTarea from './DetalleTarea';
+import ThemeToggleButton from '../Comunes/ThemeToggleButton';
 
-const ListaTareas = () => {
+const ListaTareas = ({toggleSidebar}) => {
   const { tasks, fetchTasks, deleteTask, completeTask, isLoading, error } = useTareas();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
@@ -24,6 +25,19 @@ const ListaTareas = () => {
   useEffect(() => {
     fetchTasks();
   }, []);
+
+  // const handleFilterChange = useCallback((filters) => {
+  //   const cleanFilters = Object.fromEntries(
+  //     Object.entries(filters).filter(([, v]) => v !== '')
+  //   );
+  //   fetchTasks(cleanFilters);
+  // }, [fetchTasks]);
+
+//    useEffect(() => {                                                                                                                           
+//      if (setOnFilterChange) {                                                                                                                  
+//     setOnFilterChange(() => handleFilterChange);                                                                                            
+//     }                                                                                                                                         
+//  }, [setOnFilterChange, handleFilterChange]);  
 
   const handleOpenModal = (task = null) => {
     setTaskToEdit(task);
@@ -116,6 +130,7 @@ const ListaTareas = () => {
     <div>
       <h2>Tareas</h2>
       <Button onClick={() => handleOpenModal()}>Crear Nueva Tarea</Button> 
+      <ThemeToggleButton onClick={toggleSidebar}>☰</ThemeToggleButton>
       <Table
         headers={taskHeaders}
         data={tasks}
