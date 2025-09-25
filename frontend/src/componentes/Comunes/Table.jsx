@@ -142,7 +142,7 @@ const Table = ({ headers, data, renderRow, itemsPerPage, totalItems, headerToKey
       {totalPages > 1 && (
         <PaginationContainer>
           <PageButton onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
-            Previous
+            Anterior
           </PageButton>
           {pageNumbers.map((number) => (
             <PageButton
@@ -154,7 +154,7 @@ const Table = ({ headers, data, renderRow, itemsPerPage, totalItems, headerToKey
             </PageButton>
           ))}
           <PageButton onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>
-            Next
+            Sigiente
           </PageButton>
         </PaginationContainer>
       )}

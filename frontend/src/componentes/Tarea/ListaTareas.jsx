@@ -64,8 +64,8 @@ const ListaTareas = () => {
     setIsViewModalOpen(false);
   };
 
-  const handleCompleteTask = async (id) => {
-    await completeTask(id);
+  const handleCompleteTask = async (id, completada) => {
+    await completeTask(id, completada);
     fetchTasks();
   };
 
@@ -112,8 +112,8 @@ const ListaTareas = () => {
 
   return (
     <div>
-      <h2>Tasks</h2>
-      <Button onClick={() => handleOpenModal()}>Add Task</Button> {/* Button to open modal for new task */}
+      <h2>Tareas</h2>
+      <Button onClick={() => handleOpenModal()}>Crear Nueva Tarea</Button> 
       <Table
         headers={taskHeaders}
         data={tasks}
@@ -137,12 +137,11 @@ const ListaTareas = () => {
         <DetalleTarea task={taskToView} />
         <Button
           onClick={() => {
-            handleCompleteTask(taskToView?.id);
+            handleCompleteTask(taskToView?.id, !taskToView?.completada);
             handleCloseViewModal();
           }} 
-          disabled={taskToView?.completada}
         >
-          Completar
+         {!taskToView?.completada ?  "Marcar como Completada" : "Marcar como Incompleta"}
         </Button>
       </Modal>
 

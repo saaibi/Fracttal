@@ -136,7 +136,7 @@ const Header = ({ setTheme }) => {
           </li>
         </ul>
       </HeaderActions>
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="User Information">
+      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="Información del usuario">
         {user && (
           <UserInfo>
             <p><strong>Name:</strong> {user.nombre}</p>

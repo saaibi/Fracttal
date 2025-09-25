@@ -68,11 +68,11 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
-  const completeTask = async (id) => {
+  const completeTask = async (id, completada) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await api.patch(`/tareas/${id}/completar`, { completada: true });
+      const response = await api.patch(`/tareas/${id}/completar`, { completada });
       setTasks((prev) =>
         prev.map((task) => (task.id === id ? response.data : task))
       );

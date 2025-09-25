@@ -1,4 +1,5 @@
 const db = require('../database/db');
+const format = require('pg-format');
 
 const getAllTasks = async (req, res) => {
   const { completada, categoria, prioridad, fecha_vencimiento, busqueda, etiquetas, ordenar, direccion } = req.query;
@@ -44,7 +45,8 @@ const getAllTasks = async (req, res) => {
   if (ordenar) {
     const sortFields = ['creado_en', 'fecha_vencimiento', 'prioridad', 'titulo'];
     if (sortFields.includes(ordenar)) {
-      query += ` ORDER BY ${ordenar} ${direccion === 'desc' ? 'DESC' : 'ASC'}`;
+      const sortDirection = direccion === 'desc' ? 'DESC' : 'ASC';
+      query += format(' ORDER BY %I %s', ordenar, sortDirection);
     }
   }
 
