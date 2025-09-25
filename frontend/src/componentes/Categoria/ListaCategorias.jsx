@@ -14,8 +14,7 @@ const ListaCategorias = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmAlertOpen, setIsConfirmAlertOpen] = useState(false);
   const [categoryIdToDelete, setCategoryIdToDelete] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
+  
 
   useEffect(() => {
     fetchCategories();
@@ -46,10 +45,6 @@ const ListaCategorias = () => {
     fetchCategories();
   };
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
   const categoryHeaders = ['ID', 'Nombre', 'Acciones'];
   const headerToKey = { 'ID': 'id', 'Nombre': 'nombre' };
 
@@ -77,10 +72,8 @@ const ListaCategorias = () => {
         headers={categoryHeaders}
         data={categories}
         renderRow={renderCategoryRow}
-        currentPage={currentPage}
-        itemsPerPage={itemsPerPage}
+        itemsPerPage={12}
         totalItems={categories.length}
-        onPageChange={handlePageChange}
         headerToKey={headerToKey}
       />
 

@@ -10,8 +10,6 @@ import ErrorText from '../Comunes/ErrorText';
 const ListaEtiquetas = () => {
   const { tags, isLoading, error, fetchTags } = useTags();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
 
   useEffect(() => {
     fetchTags();
@@ -21,10 +19,6 @@ const ListaEtiquetas = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     fetchTags();
-  };
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
   };
 
   const tagHeaders = ['ID', 'Nombre'];
@@ -48,10 +42,8 @@ const ListaEtiquetas = () => {
         headers={tagHeaders}
         data={tags}
         renderRow={renderTagRow}
-        currentPage={currentPage}
-        itemsPerPage={itemsPerPage}
+        itemsPerPage={12}
         totalItems={tags.length}
-        onPageChange={handlePageChange}
         headerToKey={headerToKey}
       />
 

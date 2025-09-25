@@ -77,9 +77,10 @@ const PageButton = styled(Button)`
   }
 `;
 
-const Table = ({ headers, data, renderRow, currentPage, itemsPerPage, totalItems, onPageChange, headerToKey }) => {
+const Table = ({ headers, data, renderRow, itemsPerPage, totalItems, headerToKey }) => {
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleSort = (column) => {
     if (headers && headers.includes(column)) {
@@ -140,19 +141,19 @@ const Table = ({ headers, data, renderRow, currentPage, itemsPerPage, totalItems
       </StyledTable>
       {totalPages > 1 && (
         <PaginationContainer>
-          <PageButton onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}>
+          <PageButton onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
             Previous
           </PageButton>
           {pageNumbers.map((number) => (
             <PageButton
               key={number}
-              onClick={() => onPageChange(number)}
+              onClick={() => setCurrentPage(number)}
               active={number === currentPage}
             >
               {number}
             </PageButton>
           ))}
-          <PageButton onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+          <PageButton onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>
             Next
           </PageButton>
         </PaginationContainer>

@@ -68,6 +68,23 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
+  const completeTask = async (id) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await api.patch(`/tareas/${id}/completar`, { completada: true });
+      setTasks((prev) =>
+        prev.map((task) => (task.id === id ? response.data : task))
+      );
+      setIsLoading(false);
+      return response.data;
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to complete task');
+      setIsLoading(false);
+      throw err;
+    }
+  };
+
   const value = {
     tasks,
     isLoading,
@@ -76,6 +93,7 @@ export const TaskProvider = ({ children }) => {
     addTask,
     updateTask,
     deleteTask,
+    completeTask,
   };
 
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;

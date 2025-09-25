@@ -25,7 +25,7 @@ const FormularioEtiqueta = ({ initialData = {}, onSave }) => {
         <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
       </FormGroup>
       <Button type="submit" disabled={isLoading}>Guardar Etiqueta</Button>
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+      {error && <ErrorText>{error}</ErrorText>}
     </Form>
   );
 };

@@ -10,15 +10,16 @@ import Modal from '../Comunes/Modal';
 import ConfirmAlert from '../Comunes/ConfirmAlert';
 import Chip from '../Comunes/Chip';
 import FormularioTarea from './FormularioTarea';
+import DetalleTarea from './DetalleTarea';
 
 const ListaTareas = () => {
-  const { tasks, fetchTasks, deleteTask, isLoading, error } = useTareas();
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
+  const { tasks, fetchTasks, deleteTask, completeTask, isLoading, error } = useTareas();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
   const [isConfirmAlertOpen, setIsConfirmAlertOpen] = useState(false);
   const [taskIdToDelete, setTaskIdToDelete] = useState(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [taskToView, setTaskToView] = useState(null);
 
   useEffect(() => {
     fetchTasks();
@@ -53,8 +54,19 @@ const ListaTareas = () => {
     setIsConfirmAlertOpen(false);
   };
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const handleOpenViewModal = (task) => {
+    setTaskToView(task);
+    setIsViewModalOpen(true);
+  };
+
+  const handleCloseViewModal = () => {
+    setTaskToView(null);
+    setIsViewModalOpen(false);
+  };
+
+  const handleCompleteTask = async (id) => {
+    await completeTask(id);
+    fetchTasks();
   };
 
   const setPrioridad = id => ({ 1: "Baja", 2: "Media", 3: "Alta", }[id] || '');
@@ -87,6 +99,7 @@ const ListaTareas = () => {
       </td>
       <td>
         <ActionButtons>
+          <Button onClick={() => handleOpenViewModal(task)}>Ver</Button>
           <Button onClick={() => handleOpenModal(task)}>Editar</Button>
           <Button onClick={() => handleDelete(task.id)}>Eliminar</Button>
         </ActionButtons>
@@ -105,10 +118,8 @@ const ListaTareas = () => {
         headers={taskHeaders}
         data={tasks}
         renderRow={renderTaskRow}
-        currentPage={currentPage}
-        itemsPerPage={itemsPerPage}
+        itemsPerPage={12}
         totalItems={tasks.length}
-        onPageChange={handlePageChange}
         headerToKey={headerToKey}
       />
 
@@ -122,6 +133,19 @@ const ListaTareas = () => {
           isNewTask={!taskToEdit} />
       </Modal>
 
+      <Modal isOpen={isViewModalOpen} onClose={handleCloseViewModal} title="Detalle de Tarea">
+        <DetalleTarea task={taskToView} />
+        <Button
+          onClick={() => {
+            handleCompleteTask(taskToView?.id);
+            handleCloseViewModal();
+          }} 
+          disabled={taskToView?.completada}
+        >
+          Completar
+        </Button>
+      </Modal>
+
       <ConfirmAlert
         isOpen={isConfirmAlertOpen}
         onConfirm={handleConfirmDelete}
@@ -129,6 +153,7 @@ const ListaTareas = () => {
         message="¿Estás seguro de que quieres eliminar esta tarea?"
         title="Confirmar Eliminación"
       />
+
     </div>
   );
 };
