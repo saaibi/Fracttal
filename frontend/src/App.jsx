@@ -14,6 +14,8 @@ const Container = styled.div`
   max-width: 100%;
   margin: 0 auto;
   font-family: sans-serif;
+  background-color: ${({theme}) => theme.colors.cardBackground};
+  color: ${({theme}) => theme.colors.text};
 `;
 
 const CenteredContent = styled.div`

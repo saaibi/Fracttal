@@ -53,7 +53,7 @@ const PageButton = styled(Button)`
   }
 `;
 
-const Table = ({ headers, data, renderRow, currentPage, itemsPerPage, totalItems, onPageChange }) => {
+const Table = ({ headers, data, renderRow, currentPage, itemsPerPage, totalItems, onPageChange}) => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;

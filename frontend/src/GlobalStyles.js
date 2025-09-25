@@ -28,19 +28,6 @@ const GlobalStyles = createGlobalStyle`
     font-size: 3.2em;
     line-height: 1.1;
   }
-
-  @media (prefers-color-scheme: light) {
-    :root {
-      color: #213547;
-      background-color: #ffffff;
-    }
-    a:hover {
-      color: #747bff;
-    }
-    button {
-      background-color: #f9f9f9;
-    }
-  }
 `;
 
 export default GlobalStyles;

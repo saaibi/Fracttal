@@ -32,11 +32,41 @@ export const TaskProvider = ({ children }) => {
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to add task');
       setIsLoading(false);
-      throw err; 
+      throw err;
     }
   };
 
-  // Add other task related functions (update, delete) if needed later
+  const updateTask = async (id, taskData) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await api.put(`/tareas/${id}`, taskData);
+      setTasks((prev) =>
+        prev.map((task) => (task.id === id ? response.data : task))
+      );
+      setIsLoading(false);
+      return response.data;
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to update task');
+      setIsLoading(false);
+      throw err;
+    }
+  };
+
+  const deleteTask = async (id) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      await api.delete(`/tareas/${id}`);
+      setTasks((prev) => prev.filter((task) => task.id !== id));
+      setIsLoading(false);
+      return true;
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to delete task');
+      setIsLoading(false);
+      throw err;
+    }
+  };
 
   const value = {
     tasks,
@@ -44,6 +74,8 @@ export const TaskProvider = ({ children }) => {
     error,
     fetchTasks,
     addTask,
+    updateTask,
+    deleteTask,
   };
 
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
