@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 import { useTags } from '../../hooks/useTags';
-import styled from 'styled-components';
 import Button from '../Comunes/Button';
 import FormGroup from '../Comunes/FormGroup';
-
-const FormContainer = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
+import Form from '../Comunes/Form';
 
 const FormularioEtiqueta = ({ initialData = {}, onSave }) => {
   const [nombre, setNombre] = useState(initialData.nombre || '');
@@ -25,14 +19,14 @@ const FormularioEtiqueta = ({ initialData = {}, onSave }) => {
   };
 
   return (
-    <FormContainer onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit}>
       <FormGroup>
         <label>Nombre de la Etiqueta:</label>
         <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
       </FormGroup>
       <Button type="submit" disabled={isLoading}>Guardar Etiqueta</Button>
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-    </FormContainer>
+    </Form>
   );
 };
 

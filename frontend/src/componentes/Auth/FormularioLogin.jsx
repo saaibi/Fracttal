@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate, Link } from 'react-router-dom'; // Import useNavigate and Link
 import { useAuth } from '../../hooks/useAuth';
 import Button from '../../componentes/Comunes/Button';
 import FormGroup from '../../componentes/Comunes/FormGroup'; 
 import ErrorText from '../../componentes/Comunes/ErrorText'; 
 import LoadingText from '../../componentes/Comunes/LoadingText';
-import Card from '../../componentes/Comunes/Card'; 
+import FormContainer from '../../componentes/Comunes/FormContainer'; 
+import Form from '../../componentes/Comunes/Form';
+import styled from 'styled-components';
+
+const RegisterButtonContainer = styled.div`
+  margin-top: 1rem;
+  text-align: center;
+`;
 
 const FormularioLogin = () => {
   const [email, setEmail] = useState('');
@@ -22,9 +29,9 @@ const FormularioLogin = () => {
   };
 
   return (
-    <Card>
+    <FormContainer>
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <FormGroup>
           <label>Email:</label>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -34,10 +41,16 @@ const FormularioLogin = () => {
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </FormGroup>
         <Button type="submit" disabled={isLoading}>Login</Button>
-      </form>
+      </Form>
       {isLoading && <LoadingText>Cargando...</LoadingText>}
       {error && <ErrorText>{error}</ErrorText>}
-    </Card>
+      <RegisterButtonContainer>
+        <p>Don't have an account?</p>
+        <Link to="/register">
+          <Button>Register</Button>
+        </Link>
+      </RegisterButtonContainer>
+    </FormContainer>
   );
 };
 

@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useTareas } from '../../hooks/useTareas';
 import { useCategorias } from '../../hooks/useCategorias';
-import styled from 'styled-components';
 import Button from '../Comunes/Button';
 import FormGroup from '../Comunes/FormGroup';
 import ErrorText from '../Comunes/ErrorText';
 import LoadingText from '../Comunes/LoadingText';
-
-const FormContainer = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
+import Form from '../Comunes/Form';
 
 const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
   const [titulo, setTitulo] = useState(initialData.titulo || '');
@@ -52,7 +46,7 @@ const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
   };
 
   return (
-    <FormContainer onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit}>
       <FormGroup>
         <label>Título:</label>
         <input type="text" value={titulo} onChange={(e) => setTitulo(e.target.value)} required />
@@ -89,7 +83,7 @@ const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
       </Button>
       {isLoading && <LoadingText>Guardando...</LoadingText>}
       {error && <ErrorText>{error}</ErrorText>}
-    </FormContainer>
+    </Form>
   );
 };
 
