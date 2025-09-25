@@ -14,6 +14,8 @@ const ListaCategorias = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmAlertOpen, setIsConfirmAlertOpen] = useState(false);
   const [categoryIdToDelete, setCategoryIdToDelete] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); 
+  const itemsPerPage = 12; 
 
   useEffect(() => {
     fetchCategories();
@@ -44,6 +46,10 @@ const ListaCategorias = () => {
     fetchCategories();
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   const categoryHeaders = ['ID', 'Nombre', 'Acciones'];
 
   const renderCategoryRow = (category) => (
@@ -66,7 +72,15 @@ const ListaCategorias = () => {
     <div>
       <h2>Categorías</h2>
       <Button onClick={handleOpenModal}>Crear Nueva Categoría</Button>
-      <Table headers={categoryHeaders} data={categories} renderRow={renderCategoryRow} />
+      <Table
+        headers={categoryHeaders}
+        data={categories}
+        renderRow={renderCategoryRow}
+        currentPage={currentPage}
+        itemsPerPage={itemsPerPage}
+        totalItems={categories.length}
+        onPageChange={handlePageChange}
+      />
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal} title="Crear Categoría">
         <FormularioCategoria onSave={handleCloseModal} />

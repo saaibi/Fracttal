@@ -1,13 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTareas } from '../../hooks/useTareas';
 import Table from '../Comunes/Table';
 import Button from '../Comunes/Button';
-import ActionButtons from '../Comunes/ActionButtons'; 
+import ActionButtons from '../Comunes/ActionButtons';
 import LoadingText from '../Comunes/LoadingText';
 import ErrorText from '../Comunes/ErrorText';
 
 const ListaTareas = () => {
   const { tasks, fetchTasks, addTask, isLoading, error } = useTareas();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12; 
 
   useEffect(() => {
     fetchTasks();
@@ -18,6 +20,10 @@ const ListaTareas = () => {
     if (taskTitle) {
       await addTask({ titulo: taskTitle });
     }
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   const taskHeaders = ['ID', 'Título', 'Descripción', 'Fecha Vencimiento', 'Prioridad', 'Completada', 'Categoria', 'Etiquetas', 'Acciones'];
@@ -48,7 +54,15 @@ const ListaTareas = () => {
     <div>
       <h2>Tasks</h2>
       <Button onClick={handleAddTask}>Add Task</Button>
-      <Table headers={taskHeaders} data={tasks} renderRow={renderTaskRow} />
+      <Table
+        headers={taskHeaders}
+        data={tasks}
+        renderRow={renderTaskRow}
+        currentPage={currentPage}
+        itemsPerPage={itemsPerPage}
+        totalItems={tasks.length}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };

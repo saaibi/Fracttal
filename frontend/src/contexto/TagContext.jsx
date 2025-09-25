@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState } from 'react';
 import api from '../servicios/api';
 
 const TagContext = createContext(null);
@@ -32,39 +32,7 @@ export const TagProvider = ({ children }) => {
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to create tag');
       setIsLoading(false);
-      throw err; // Re-throw to allow component to handle
-    }
-  };
-
-  const updateTag = async (id, tagData) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await api.put(`/etiquetas/${id}`, tagData);
-      setTags((prev) =>
-        prev.map((tag) => (tag.id === id ? response.data : tag))
-      );
-      setIsLoading(false);
-      return response.data;
-    } catch (err) {
-      setError(err.response?.data?.error || 'Failed to update tag');
-      setIsLoading(false);
-      throw err; // Re-throw to allow component to handle
-    }
-  };
-
-  const deleteTag = async (id) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      await api.delete(`/etiquetas/${id}`);
-      setTags((prev) => prev.filter((tag) => tag.id !== id));
-      setIsLoading(false);
-      return true;
-    } catch (err) {
-      setError(err.response?.data?.error || 'Failed to delete tag');
-      setIsLoading(false);
-      throw err; // Re-throw to allow component to handle
+      throw err; 
     }
   };
 
@@ -73,9 +41,7 @@ export const TagProvider = ({ children }) => {
     isLoading,
     error,
     fetchTags,
-    createTag,
-    updateTag,
-    deleteTag,
+    createTag
   };
 
   return <TagContext.Provider value={value}>{children}</TagContext.Provider>;
