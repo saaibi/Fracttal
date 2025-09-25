@@ -35,7 +35,7 @@ This project is configured to run with Docker Compose.
     ```bash
     npm install
     ```
-3.  Create a `.env` file in the root directory and add the following environment variables:
+3.  Create a `back.env` file in the root directory and add the following environment variables:
     ```
     DB_USER=fracttal_user
     DB_HOST=localhost
@@ -44,8 +44,7 @@ This project is configured to run with Docker Compose.
     DB_PORT=5432
     JWT_SECRET=supersecret
     ```
-4.  Create the database and tables using the `backend/src/database/database.sql` file.
-5.  Start the backend server:
+4.  Start the backend server:
     ```bash
     npm start
     ```
