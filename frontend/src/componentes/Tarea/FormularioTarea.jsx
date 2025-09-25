@@ -6,13 +6,18 @@ import FormGroup from '../Comunes/FormGroup';
 import ErrorText from '../Comunes/ErrorText';
 import LoadingText from '../Comunes/LoadingText';
 import Form from '../Comunes/Form';
+import { useTags } from '../../hooks/useTags';
 
 const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
+  const today = new Date().toISOString().split('T')[0];
   const [titulo, setTitulo] = useState(initialData.titulo || '');
   const [descripcion, setDescripcion] = useState(initialData.descripcion || '');
   const [fechaVencimiento, setFechaVencimiento] = useState(initialData.fecha_vencimiento || '');
   const [prioridad, setPrioridad] = useState(initialData.prioridad || 1);
   const [categoriaId, setCategoriaId] = useState(initialData.categoria_id || '');
+  const [errorFecha, setErrorFecha] = useState('');
+  const [selectedTags, setSelectedTags] = useState([]);
+  const { tags, fetchTags } = useTags();
 
   const { addTask, updateTask, isLoading, error } = useTareas();
   const { categories, fetchCategories } = useCategorias();
@@ -20,17 +25,36 @@ const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
 
   useEffect(() => {
     fetchCategories();
+    fetchTags();
   }, []);
 
+  const handleDateChange = (e) => {
+    const selectedDate = e.target.value;
+    if (selectedDate < today) {
+      setErrorFecha('La fecha de vencimiento no puede ser anterior a la fecha actual.');
+    } else {
+      setErrorFecha('');
+    }
+    setFechaVencimiento(selectedDate);
+  };
+
+   const handleTagChange = (e) => {
+    const value = Array.from(e.target.selectedOptions, option => parseInt(option.value));
+    setSelectedTags(value);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (errorFecha) {
+      return;
+    }
     const taskData = {
       titulo,
       descripcion,
       fecha_vencimiento: fechaVencimiento || null,
       prioridad: parseInt(prioridad),
       categoria_id: categoriaId ? parseInt(categoriaId) : null,
+      etiquetas: selectedTags
     };
 
     try {
@@ -57,7 +81,8 @@ const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
       </FormGroup>
       <FormGroup>
         <label>Fecha de Vencimiento:</label>
-        <input type="date" value={fechaVencimiento} onChange={(e) => setFechaVencimiento(e.target.value)} required={isNewTask} />
+        <input type="date" min={today} value={fechaVencimiento} onChange={handleDateChange} required={isNewTask} />
+        {errorFecha && <ErrorText>{errorFecha}</ErrorText>}
       </FormGroup>
       <FormGroup>
         <label>Prioridad:</label>
@@ -78,7 +103,17 @@ const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
           ))}
         </select>
       </FormGroup>
-      <Button type="submit" disabled={isLoading}>
+       {isNewTask && <FormGroup>
+        <label>Etiquetas:</label>
+        <select multiple={true} value={selectedTags} onChange={handleTagChange}>
+          {tags.map((tag) => (
+            <option key={tag.id} value={tag.id}>
+              {tag.nombre}
+            </option>
+          ))}
+        </select>
+      </FormGroup>}
+      <Button type="submit" disabled={isLoading || !!errorFecha}>
         {initialData.id ? 'Actualizar Tarea' : 'Crear Tarea'}
       </Button>
       {isLoading && <LoadingText>Guardando...</LoadingText>}

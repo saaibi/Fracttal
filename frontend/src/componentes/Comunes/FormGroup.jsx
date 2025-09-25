@@ -10,12 +10,23 @@ const FormGroup = styled.div`
     color: ${(props) => props.theme.colors.text};
   }
 
-  input {
+  input,
+  textarea,
+  select {
     width: 100%;
     padding: 0.8rem;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    font-family: inherit;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  select[multiple] {
+    height: 15rem;
   }
 `;
 

@@ -59,7 +59,7 @@ const getAllTasks = async (req, res) => {
 };
 
 const createTask = async (req, res) => {
-    const { titulo, descripcion, fecha_vencimiento, prioridad, categoria_id } = req.body;
+    const { titulo, descripcion, fecha_vencimiento, prioridad, categoria_id, etiquetas } = req.body;
     const userId = req.userId;
 
     try {
@@ -67,7 +67,15 @@ const createTask = async (req, res) => {
             'INSERT INTO tareas (titulo, descripcion, fecha_vencimiento, prioridad, categoria_id, usuario_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
             [titulo, descripcion, fecha_vencimiento, prioridad, categoria_id, userId]
         );
-        res.status(201).json(result.rows[0]);
+        const newTask = result.rows[0];
+
+        if (etiquetas && etiquetas.length > 0) {
+            const tareaEtiquetasValues = etiquetas.map(etiqueta_id => [newTask.id, etiqueta_id]);
+            const query = format('INSERT INTO tarea_etiquetas (tarea_id, etiqueta_id) VALUES %L', tareaEtiquetasValues);
+            await db.query(query);
+        }
+
+        res.status(201).json(newTask);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
