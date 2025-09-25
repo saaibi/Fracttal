@@ -4,7 +4,7 @@ const getAllTasks = async (req, res) => {
   const { completada, categoria, prioridad, fecha_vencimiento, busqueda, etiquetas, ordenar, direccion } = req.query;
   const userId = req.userId;
 
-  let query = 'SELECT t.*, c.nombre as categoria_nombre, e.nombre as etiquetas FROM tareas t LEFT JOIN categorias c ON t.categoria_id = c.id LEFT JOIN tarea_etiquetas te ON t.id = te.tarea_id LEFT JOIN etiquetas e ON te.etiqueta_id = e.id WHERE t.usuario_id = $1';
+  let query = "SELECT t.*, c.nombre as categoria_nombre, STRING_AGG(e.nombre, ', ') as etiquetas FROM tareas t LEFT JOIN categorias c ON t.categoria_id = c.id LEFT JOIN tarea_etiquetas te ON t.id = te.tarea_id LEFT JOIN etiquetas e ON te.etiqueta_id = e.id WHERE t.usuario_id = $1";
   const queryParams = [userId];
   let paramIndex = 2;
 

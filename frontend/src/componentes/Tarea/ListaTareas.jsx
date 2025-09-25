@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import { useTareas } from '../../hooks/useTareas'; // Changed import path
+import { useTareas } from '../../hooks/useTareas'; 
 
 const ListaTareas = () => {
   const { tasks, fetchTasks, addTask, isLoading, error } = useTareas();
 
   useEffect(() => {
     fetchTasks();
-  }, [fetchTasks]);
+  }, []);
 
   const handleAddTask = async () => {
     const taskTitle = prompt("Enter task title:");
