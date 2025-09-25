@@ -71,13 +71,14 @@ const ListaTareas = () => {
 
   const setPrioridad = id => ({ 1: "Baja", 2: "Media", 3: "Alta", }[id] || '');
 
-  const taskHeaders = ['ID', 'Título', 'Descripción', 'Fecha Vencimiento', 'Prioridad', 'Completada', 'Categoria', 'Etiquetas', 'Acciones'];
+  const taskHeaders = ['ID', 'Título', 'Descripción', 'Fecha Vencimiento', 'Prioridad', 'Lote', 'Completada', 'Categoria', 'Etiquetas', 'Acciones'];
   const headerToKey = {
     'ID': 'id',
     'Título': 'titulo',
     'Descripción': 'descripcion',
     'Fecha Vencimiento': 'fecha_vencimiento',
     'Prioridad': 'prioridad',
+    'Lote': 'lote',
     'Completada': 'completada',
     'Categoria': 'categoria_nombre',
     'Etiquetas': 'etiquetas',
@@ -90,6 +91,7 @@ const ListaTareas = () => {
       <td>{task.descripcion}</td>
       <td>{moment(task.fecha_vencimiento).format('DD/MM/YYYY')}</td>
       <td>{setPrioridad(task.prioridad)}</td>
+      <td>{task.lote}</td>
       <td>{task.completada ? 'Sí' : 'No'}</td>
       <td>{task.categoria_nombre}</td>
       <td>
@@ -118,7 +120,7 @@ const ListaTareas = () => {
         headers={taskHeaders}
         data={tasks}
         renderRow={renderTaskRow}
-        itemsPerPage={12}
+        itemsPerPage={100}
         totalItems={tasks.length}
         headerToKey={headerToKey}
       />

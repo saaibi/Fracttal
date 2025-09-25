@@ -24,6 +24,7 @@ CREATE TABLE fracttaldb.tareas (
     completada BOOLEAN DEFAULT FALSE,
     usuario_id INTEGER REFERENCES fracttaldb.usuarios(id) ON DELETE CASCADE,
     categoria_id INTEGER REFERENCES fracttaldb.categorias(id) ON DELETE SET NULL,
+    lote VARCHAR(255),
     creado_en TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     actualizado_en TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

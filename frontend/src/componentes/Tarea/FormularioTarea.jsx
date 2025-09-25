@@ -14,6 +14,7 @@ const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
   const [descripcion, setDescripcion] = useState(initialData.descripcion || '');
   const [fechaVencimiento, setFechaVencimiento] = useState(initialData.fecha_vencimiento || '');
   const [prioridad, setPrioridad] = useState(initialData.prioridad || 1);
+  const [lote, setLote] = useState(initialData.prioridad || '');
   const [categoriaId, setCategoriaId] = useState(initialData.categoria_id || '');
   const [errorFecha, setErrorFecha] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
@@ -53,6 +54,7 @@ const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
       descripcion,
       fecha_vencimiento: fechaVencimiento || null,
       prioridad: parseInt(prioridad),
+      lote,
       categoria_id: categoriaId ? parseInt(categoriaId) : null,
       etiquetas: selectedTags
     };
@@ -92,6 +94,10 @@ const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
           <option value={3}>Alta</option>
         </select>
       </FormGroup>
+      {isNewTask && <FormGroup>
+        <label>Lote:</label>
+        <input type="text" value={lote} onChange={(e) => setLote(e.target.value)} />
+      </FormGroup>}
       <FormGroup>
         <label>Categoría:</label>
         <select value={categoriaId} onChange={(e) => setCategoriaId(e.target.value)} required={isNewTask}>

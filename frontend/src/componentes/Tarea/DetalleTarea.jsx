@@ -41,6 +41,10 @@ const DetalleTarea = ({ task }) => {
         <strong>Prioridad:</strong>
         {setPrioridad(task.prioridad)}
       </DetailItem>
+       <DetailItem>
+        <strong>Lote:</strong>
+        {task.lote}
+      </DetailItem>
       <DetailItem>
         <strong>Completada:</strong>
         {task.completada ? 'Sí' : 'No'}

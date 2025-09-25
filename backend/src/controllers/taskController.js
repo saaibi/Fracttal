@@ -2,7 +2,7 @@ const db = require('../database/db');
 const format = require('pg-format');
 
 const getAllTasks = async (req, res) => {
-  const { completada, categoria, prioridad, fecha_vencimiento, busqueda, etiquetas, ordenar, direccion } = req.query;
+  const { completada, categoria, prioridad, fecha_vencimiento, busqueda, etiquetas, ordenar, direccion, lote } = req.query;
   const userId = req.userId;
 
   let query = "SELECT t.*, c.nombre as categoria_nombre, STRING_AGG(e.nombre, ', ') as etiquetas FROM tareas t LEFT JOIN categorias c ON t.categoria_id = c.id LEFT JOIN tarea_etiquetas te ON t.id = te.tarea_id LEFT JOIN etiquetas e ON te.etiqueta_id = e.id WHERE t.usuario_id = $1";
@@ -39,6 +39,11 @@ const getAllTasks = async (req, res) => {
     query += ` AND e.nombre = ANY($${paramIndex++})`
     queryParams.push(tags);
   }
+
+  if (lote) {
+    query += ` AND t.lote = $${paramIndex++}`;
+    queryParams.push(lote);
+  }
   
   query += ' GROUP BY t.id, c.nombre';
 
@@ -59,13 +64,13 @@ const getAllTasks = async (req, res) => {
 };
 
 const createTask = async (req, res) => {
-    const { titulo, descripcion, fecha_vencimiento, prioridad, categoria_id, etiquetas } = req.body;
+    const { titulo, descripcion, fecha_vencimiento, prioridad, categoria_id, etiquetas, lote } = req.body;
     const userId = req.userId;
 
     try {
         const result = await db.query(
-            'INSERT INTO tareas (titulo, descripcion, fecha_vencimiento, prioridad, categoria_id, usuario_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-            [titulo, descripcion, fecha_vencimiento, prioridad, categoria_id, userId]
+            'INSERT INTO tareas (titulo, descripcion, fecha_vencimiento, prioridad, categoria_id, usuario_id, lote) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+            [titulo, descripcion, fecha_vencimiento, prioridad, categoria_id, userId, lote]
         );
         const newTask = result.rows[0];
 
@@ -83,7 +88,7 @@ const createTask = async (req, res) => {
 
 const updateTask = async (req, res) => {
     const { id } = req.params;
-    const { titulo, descripcion, fecha_vencimiento, prioridad, categoria_id } = req.body;
+    const { titulo, descripcion, fecha_vencimiento, prioridad, categoria_id, etiquetas } = req.body;
     const userId = req.userId;
 
     try {
@@ -94,6 +99,25 @@ const updateTask = async (req, res) => {
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Task not found' });
         }
+
+        if (etiquetas !== undefined) {
+            if (etiquetas.length > 0) {
+                const distinctEtiquetas = [...new Set(etiquetas)];
+                const { rows } = await db.query('SELECT COUNT(id) as count FROM etiquetas WHERE id = ANY($1) AND usuario_id = $2', [distinctEtiquetas, userId]);
+                if (parseInt(rows[0].count) !== distinctEtiquetas.length) {
+                    return res.status(400).json({ error: 'One or more tag IDs are invalid or do not belong to the user.' });
+                }
+            }
+
+            await db.query('DELETE FROM tarea_etiquetas WHERE tarea_id = $1', [id]);
+
+            if (etiquetas.length > 0) {
+                const tareaEtiquetasValues = etiquetas.map(etiqueta_id => [id, etiqueta_id]);
+                const query = format('INSERT INTO tarea_etiquetas (tarea_id, etiqueta_id) VALUES %L', tareaEtiquetasValues);
+                await db.query(query);
+            }
+        }
+
         res.json(result.rows[0]);
     } catch (error) {
         res.status(500).json({ error: error.message });
