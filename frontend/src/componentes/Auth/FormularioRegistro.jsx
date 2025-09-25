@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../hooks/useAuth'; // Changed import path
+import { useAuth } from '../../hooks/useAuth';
+import Button from '../../componentes/Comunes/Button';
+import FormGroup from '../../componentes/Comunes/FormGroup';
+import ErrorText from '../../componentes/Comunes/ErrorText';
+import LoadingText from '../../componentes/Comunes/LoadingText';
+import Card from '../../componentes/Comunes/Card'; 
 
 const FormularioRegistro = () => {
   const [nombre, setNombre] = useState('');
@@ -13,26 +18,26 @@ const FormularioRegistro = () => {
   };
 
   return (
-    <div>
+    <Card>
       <h2>Registro</h2>
       <form onSubmit={handleSubmit}>
-        <div>
+        <FormGroup>
           <label>Nombre:</label>
           <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
-        </div>
-        <div>
+        </FormGroup>
+        <FormGroup>
           <label>Email:</label>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </div>
-        <div>
+        </FormGroup>
+        <FormGroup>
           <label>Contraseña:</label>
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        </div>
-        <button type="submit" disabled={isLoading}>Registrar</button>
+        </FormGroup>
+        <Button type="submit" disabled={isLoading}>Registrar</Button>
       </form>
-      {isLoading && <p>Cargando...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-    </div>
+      {isLoading && <LoadingText>Cargando...</LoadingText>}
+      {error && <ErrorText>{error}</ErrorText>}
+    </Card>
   );
 };
 

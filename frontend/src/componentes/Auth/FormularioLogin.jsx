@@ -1,60 +1,10 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import styled from 'styled-components';
-
-const Card = styled.div`
-  background-color: ${({theme}) => theme.colors.background};
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  max-width: 400px;
-`;
-
-const FormGroup = styled.div`
-  margin-bottom: 1rem;
-
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-    color: #333;
-  }
-
-  input {
-    width: 100%;
-    padding: 0.8rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-`;
-
-const Button = styled.button`
-  background-color: ${({theme}) => theme.colors.primary};
-  color: white;
-  padding: 0.8rem 1.2rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  width: 100%;
-
-  &:disabled {
-    background-color: ${({theme}) => theme.colors.background};
-    cursor: not-allowed;
-  }
-`;
-
-const ErrorText = styled.p`
-  color: red;
-  margin-top: 1rem;
-  text-align: center;
-`;
-
-const LoadingText = styled.p`
-  text-align: center;
-  margin-top: 1rem;
-`;
+import Button from '../../componentes/Comunes/Button';
+import FormGroup from '../../componentes/Comunes/FormGroup'; 
+import ErrorText from '../../componentes/Comunes/ErrorText'; 
+import LoadingText from '../../componentes/Comunes/LoadingText';
+import Card from '../../componentes/Comunes/Card'; 
 
 const FormularioLogin = () => {
   const [email, setEmail] = useState('');

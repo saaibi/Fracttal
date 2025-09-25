@@ -32,7 +32,7 @@ export const TaskProvider = ({ children }) => {
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to add task');
       setIsLoading(false);
-      throw err; // Re-throw to allow component to handle
+      throw err; 
     }
   };
 

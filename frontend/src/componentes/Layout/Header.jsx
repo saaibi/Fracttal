@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const HeaderContainer = styled.header`
-  background-color: ${({theme}) => theme.colors.background};
+  background-color: ${({theme}) => theme.colors.cardBackground};
   color: ${({theme}) => theme.colors.text};
   padding: 1rem;
   display: flex;

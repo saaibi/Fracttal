@@ -32,7 +32,7 @@ export const CategoryProvider = ({ children }) => {
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to create category');
       setIsLoading(false);
-      throw err; // Re-throw to allow component to handle
+      throw err; 
     }
   };
 
@@ -49,7 +49,7 @@ export const CategoryProvider = ({ children }) => {
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to update category');
       setIsLoading(false);
-      throw err; // Re-throw to allow component to handle
+      throw err; 
     }
   };
 
@@ -64,7 +64,7 @@ export const CategoryProvider = ({ children }) => {
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to delete category');
       setIsLoading(false);
-      throw err; // Re-throw to allow component to handle
+      throw err; 
     }
   };
 

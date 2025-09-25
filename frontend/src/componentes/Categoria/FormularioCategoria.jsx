@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { useCategorias } from '../../hooks/useCategorias'; // Changed import path
+import { useCategorias } from '../../hooks/useCategorias';
+import styled from 'styled-components'; 
+import Button from '../../componentes/Comunes/Button'; 
+import FormGroup from '../../componentes/Comunes/FormGroup'; 
+
+const FormContainer = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
 
 const FormularioCategoria = ({ initialData = {}, onSave }) => {
   const [nombre, setNombre] = useState(initialData.nombre || '');
@@ -16,13 +25,13 @@ const FormularioCategoria = ({ initialData = {}, onSave }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
+    <FormContainer onSubmit={handleSubmit}> 
+      <FormGroup>
         <label>Nombre de la Categoría:</label>
         <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
-      </div>
-      <button type="submit" disabled={isLoading}>Guardar Categoría</button>
-    </form>
+      </FormGroup>
+      <Button type="submit" disabled={isLoading}>Guardar Categoría</Button> 
+    </FormContainer>
   );
 };
 
