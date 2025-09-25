@@ -1,19 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './componentes/Layout/Layout';
 import FormularioLogin from './componentes/Auth/FormularioLogin';
 import FormularioRegistro from './componentes/Auth/FormularioRegistro';
 import ListaTareas from './componentes/Tarea/ListaTareas';
 import ListaCategorias from './componentes/Categoria/ListaCategorias';
+import ListaEtiquetas from './componentes/Etiqueta/ListaEtiquetas';
 import { useAuth } from './hooks/useAuth';
 import styled, { ThemeProvider } from 'styled-components';
-import { darkTheme, lightTheme } from './theme';
-import { useState } from 'react';
+import { lightTheme } from './theme';
 
 const Container = styled.div`
   max-width: 100%;
   margin: 0 auto;
-  padding: 20px;
   font-family: sans-serif;
 `;
 
@@ -31,11 +30,9 @@ const PrivateRoute = ({ children }) => {
 
 function App() {
   const [theme, setTheme] = useState(lightTheme);
-  const isDarkTheme = theme.id === 'dark';
 
   return (
     <ThemeProvider theme={theme}>
-      <button onClick={() => setTheme(isDarkTheme ? lightTheme : darkTheme)}>  Toggle Theme </button>
       <Container>
         <Router>
           <Routes>
@@ -59,7 +56,7 @@ function App() {
               path="/"
               element={
                 <PrivateRoute>
-                  <Layout>
+                  <Layout setTheme={setTheme}>
                     <ListaTareas />
                   </Layout>
                 </PrivateRoute>
@@ -69,8 +66,18 @@ function App() {
               path="/categorias"
               element={
                 <PrivateRoute>
-                  <Layout>
+                  <Layout setTheme={setTheme}>
                     <ListaCategorias />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/tags"
+              element={
+                <PrivateRoute>
+                  <Layout setTheme={setTheme}>
+                    <ListaEtiquetas />
                   </Layout>
                 </PrivateRoute>
               }

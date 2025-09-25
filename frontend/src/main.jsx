@@ -4,17 +4,20 @@ import App from './App';
 import { AuthProvider } from './contexto/AuthContext';
 import { CategoryProvider } from './contexto/CategoryContext';
 import { TaskProvider } from './contexto/TaskContext';
+import { TagProvider } from './contexto/TagContext'; // Import TagProvider
 import GlobalStyles from './GlobalStyles';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <GlobalStyles />
-      <AuthProvider>
-        <CategoryProvider>
-          <TaskProvider>
+    <AuthProvider>
+      <CategoryProvider>
+        <TaskProvider>
+          <TagProvider> 
             <App />
-          </TaskProvider>
-        </CategoryProvider>
-      </AuthProvider>
+          </TagProvider>
+        </TaskProvider>
+      </CategoryProvider>
+    </AuthProvider>
   </React.StrictMode>
 );

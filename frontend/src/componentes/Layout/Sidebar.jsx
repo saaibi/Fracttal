@@ -1,24 +1,45 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth'; // Changed import path
+import styled from 'styled-components';
+
+const Aside = styled.aside`
+  width: 200px;
+  padding: 20px;
+  background-color: ${({theme}) => theme.colors.cardBackground};
+  border-right: 1px solid ${({theme}) => theme.colors.cardBorder};
+  color: ${({theme}) => theme.colors.text};
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    margin-bottom: 10px;
+  }
+
+  a {
+    text-decoration: none;
+    color: ${({theme}) => theme.colors.text};
+    &:hover {
+      color: ${({theme}) => theme.colors.primary};
+    }
+  }
+`;
 
 const Sidebar = () => {
-  const { logout } = useAuth();
-
-  const handleLogout = () => {
-    logout();
-  };
 
   return (
-    <aside style={{ width: '200px', padding: '20px', backgroundColor: '#f0f0f0', borderRight: '1px solid #ccc' }}>
+    <Aside>
       <nav>
         <ul>
           <li><Link to="/">Tasks</Link></li>
           <li><Link to="/categorias">Categories</Link></li>
-          <li><button onClick={handleLogout}>Logout</button></li>
+          <li><Link to="/tags">Tags</Link></li>
         </ul>
       </nav>
-    </aside>
+    </Aside>
   );
 };
 

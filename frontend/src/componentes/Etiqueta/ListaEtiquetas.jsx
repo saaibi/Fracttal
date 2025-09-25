@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useCategorias } from '../../hooks/useCategorias';
+import { useTags } from '../../hooks/useTags';
 import Modal from '../Comunes/Modal';
-import FormularioCategoria from './FormularioCategoria';
+import FormularioEtiqueta from './FormularioEtiqueta';
 import ConfirmAlert from '../Comunes/ConfirmAlert';
 import Button from '../Comunes/Button';
 import Table from '../Comunes/Table';
@@ -9,50 +9,50 @@ import ActionButtons from '../Comunes/ActionButtons';
 import LoadingText from '../Comunes/LoadingText';
 import ErrorText from '../Comunes/ErrorText';
 
-const ListaCategorias = () => {
-  const { categories, isLoading, error, fetchCategories, deleteCategory } = useCategorias();
+const ListaEtiquetas = () => {
+  const { tags, isLoading, error, fetchTags, deleteTag } = useTags();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmAlertOpen, setIsConfirmAlertOpen] = useState(false);
-  const [categoryIdToDelete, setCategoryIdToDelete] = useState(null);
+  const [tagIdToDelete, setTagIdToDelete] = useState(null);
 
   useEffect(() => {
-    fetchCategories();
+    fetchTags();
   }, []);
 
   const handleDelete = (id) => {
-    setCategoryIdToDelete(id);
+    setTagIdToDelete(id);
     setIsConfirmAlertOpen(true);
   };
 
   const handleConfirmDelete = async () => {
-    if (categoryIdToDelete) {
-      await deleteCategory(categoryIdToDelete);
-      fetchCategories();
-      setCategoryIdToDelete(null);
+    if (tagIdToDelete) {
+      await deleteTag(tagIdToDelete);
+      fetchTags();
+      setTagIdToDelete(null);
       setIsConfirmAlertOpen(false);
     }
   };
 
   const handleCancelDelete = () => {
-    setCategoryIdToDelete(null);
+    setTagIdToDelete(null);
     setIsConfirmAlertOpen(false);
   };
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    fetchCategories();
+    fetchTags();
   };
 
-  const categoryHeaders = ['ID', 'Nombre', 'Acciones'];
+  const tagHeaders = ['ID', 'Nombre', 'Acciones'];
 
-  const renderCategoryRow = (category) => (
-    <tr key={category.id}>
-      <td>{category.id}</td>
-      <td>{category.nombre}</td>
+  const renderTagRow = (tag) => (
+    <tr key={tag.id}>
+      <td>{tag.id}</td>
+      <td>{tag.nombre}</td>
       <td>
-        <ActionButtons>
-          <Button onClick={() => handleDelete(category.id)}>Eliminar</Button>
+        <ActionButtons> 
+          <Button onClick={() => handleDelete(tag.id)}>Eliminar</Button>
           {/* Add edit button */}
         </ActionButtons>
       </td>
@@ -64,23 +64,23 @@ const ListaCategorias = () => {
 
   return (
     <div>
-      <h2>Categorías</h2>
-      <Button onClick={handleOpenModal}>Crear Nueva Categoría</Button>
-      <Table headers={categoryHeaders} data={categories} renderRow={renderCategoryRow} />
+      <h2>Etiquetas</h2>
+      <Button onClick={handleOpenModal}>Crear Nueva Etiqueta</Button>
+      <Table headers={tagHeaders} data={tags} renderRow={renderTagRow} />
 
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal} title="Crear Categoría">
-        <FormularioCategoria onSave={handleCloseModal} />
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal} title="Crear Etiqueta">
+        <FormularioEtiqueta onSave={handleCloseModal} />
       </Modal>
 
       <ConfirmAlert
         isOpen={isConfirmAlertOpen}
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
-        message="¿Estás seguro de que quieres eliminar esta categoría?"
+        message="¿Estás seguro de que quieres eliminar esta etiqueta?"
         title="Confirmar Eliminación"
       />
     </div>
   );
 };
 
-export default ListaCategorias;
+export default ListaEtiquetas;
