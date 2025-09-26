@@ -21,14 +21,30 @@ const ActionContainer = styled.div`
   align-items: center;
   margin-bottom: 1rem;
   margin: 0;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+     flex-direction: column
+  }
+`;
+
+const Actions = styled.div`
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+     display: flex;
+     margin-bottom: 0.5rem;
+  }
 `;
 
 const SeacrchContainer = styled.div`
-   width: 30%;
+  width: 30%;
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
 `;
 
 const SearchInput = styled.input`
-  width: 80%;
+  width: 100%;
   padding: 0.8rem;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -320,7 +336,7 @@ const ListaTareas = ({ toggleSidebar }) => {
     <div>
       <h2>Tareas</h2>
       <ActionContainer>
-        <div>
+        <Actions>
           <Button onClick={() => handleOpenModal()}>╋</Button>
           <ThemeButton onClick={() => fetchTasks()}>⟳ Refrescar</ThemeButton>
           <ThemeButton onClick={toggleSidebar}>ᯤ Filtro</ThemeButton>
@@ -334,7 +350,7 @@ const ListaTareas = ({ toggleSidebar }) => {
               </div>
             )}
           />
-        </div>
+        </Actions>
         <SeacrchContainer>
           <SearchInput type="text" placeholder="Buscar..." id="busqueda" value={busqueda || ''} onChange={(e) => setBusqueda(e.target.value)} />
         </SeacrchContainer>
