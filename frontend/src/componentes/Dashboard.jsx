@@ -1,102 +1,72 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useBI } from '../hooks/useBI';
+import api from '../servicios/api';
+import QueryCard from './Comunes/QueryCard';
+import { useSnackbar } from '../hooks/useSnackbar';
 
 const DashboardContainer = styled.div`
   padding: 2rem;
 `;
 
-const QuerySelector = styled.div`
-  margin-bottom: 2rem;
-`;
-
-const QueryResult = styled.div`
-  margin-top: 2rem;
-  overflow-x: auto;
-`;
-
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-
-  th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-
-  th {
-    background-color: #f2f2f2;
-    text-align: left;
-  }
+const CardsContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1rem;
 `;
 
 const availableQueries = [
-  'userParticipationAnalysis',
-  'completionRateTrends',
-  'categoryPerformance',
-  'userProductivityPatterns',
-  'overdueTaskAnalysis',
-  'tagUsageStatistics',
-  'userRetentionMetrics',
-  'priorityDistributionAnalysis',
-  'seasonalTrends',
-  'performanceBenchmarking',
+  { id: 'userParticipationAnalysis', title: '1. Análisis de Participación de Usuarios' },
+  { id: 'userProductivityPatterns', title: '4. Patrones de Productividad del Usuario' },
+  { id: 'seasonalTrends', title: '9. Tendencias Estacionales' },
+  { id: 'performanceBenchmarking', title: '10. Benchmarking de Rendimiento' },
+  { id: 'userRetentionMetrics', title: '7. Métricas de Retención de Usuarios' },
+  { id: 'overdueTaskAnalysis', title: '5. Análisis de Tareas Vencidas' },
+  { id: 'priorityDistributionAnalysis', title: '8. Análisis de Distribución de Prioridad' },
+  { id: 'completionRateTrends', title: '2. Tendencias de Tasa de Completado' },
+  { id: 'tagUsageStatistics', title: '6. Estadísticas de Uso de Etiquetas' },
+  { id: 'categoryPerformance', title: '3. Rendimiento por Categoría' }
+
 ];
 
 const Dashboard = () => {
-  const { data, loading, error, executeGetQuery } = useBI();
-  const [selectedQuery, setSelectedQuery] = useState(availableQueries[0]);
+  const { showSnackbar } = useSnackbar();
+  const [queryData, setQueryData] = useState({});
+  const [loading, setLoading] = useState(true);
 
-  const handleQueryChange = (e) => {
-    setSelectedQuery(e.target.value);
-  };
+  useEffect(() => {
+    const fetchAllQueries = async () => {
+      try {
+        const promises = availableQueries.map(query => api.get(`/bi/${query.id}`));
+        const results = await Promise.all(promises);
+        const allData = availableQueries.reduce((acc, query, index) => {
+          acc[query.id] = results[index].data;
+          return acc;
+        }, {});
+        setQueryData(allData);
+      } catch (err) {
+        showSnackbar(err)
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleExecuteGetQuery = () => {
-    executeGetQuery(selectedQuery);
-  };
+    fetchAllQueries();
+  }, [showSnackbar]);
 
   return (
     <DashboardContainer>
       <h1>Business Intelligence Dashboard</h1>
-      <QuerySelector>
-        <h2>Pre-defined Queries</h2>
-        <select onChange={handleQueryChange} value={selectedQuery}>
-          {availableQueries.map((query) => (
-            <option key={query} value={query}>
-              {query}
-            </option>
-          ))}
-        </select>
-        <button onClick={handleExecuteGetQuery} disabled={loading}>
-          Execute
-        </button>
-      </QuerySelector>
-
       {loading && <p>Loading...</p>}
-      {error && <p>Error: {error.message}</p>}
-
-      {data && (
-        <QueryResult>
-          <h2>Query Result</h2>
-          <Table>
-            <thead>
-              <tr>
-                {Object.keys(data[0] || {}).map((key) => (
-                  <th key={key}>{key}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((row, index) => (
-                <tr key={index}>
-                  {Object.values(row).map((value, i) => (
-                    <td key={i}>{value}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </QueryResult>
+      {!loading && (
+        <CardsContainer>
+          {availableQueries.map(query => (
+            <QueryCard
+              key={query.id}
+              title={query.title}
+              data={queryData[query.id]}
+            />
+          ))}
+        </CardsContainer>
       )}
     </DashboardContainer>
   );
