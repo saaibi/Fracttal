@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
+import styled from 'styled-components';
 import { useTareas } from '../../hooks/useTareas';
 import Table from '../Comunes/Table';
 import Button from '../Comunes/Button';
@@ -13,31 +14,59 @@ import FormularioTarea from './FormularioTarea';
 import DetalleTarea from './DetalleTarea';
 import ThemeToggleButton from '../Comunes/ThemeToggleButton';
 
-const ListaTareas = ({toggleSidebar}) => {
-  const { tasks, fetchTasks, deleteTask, completeTask, isLoading, error } = useTareas();
+const ActionContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+`;
+
+const SeacrchContainer = styled.div`
+   width: 50%;
+`;
+
+const SearchInput = styled.input`
+  width: 90%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: inherit;
+`;
+
+const ThemeButton = styled(ThemeToggleButton)`
+  color: ${({ theme }) => theme.colors.primary};
+   &:hover {
+    color: ${({ theme }) => theme.colors.text};
+  }
+`;
+
+const ListaTareas = ({ toggleSidebar }) => {
+  const { tasks, fetchTasks, deleteTask, completeTask, isLoading, error, onFilterChange } = useTareas();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
   const [isConfirmAlertOpen, setIsConfirmAlertOpen] = useState(false);
   const [taskIdToDelete, setTaskIdToDelete] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [taskToView, setTaskToView] = useState(null);
+  const [busqueda, setBusqueda] = useState('');
 
   useEffect(() => {
     fetchTasks();
   }, []);
 
-  // const handleFilterChange = useCallback((filters) => {
-  //   const cleanFilters = Object.fromEntries(
-  //     Object.entries(filters).filter(([, v]) => v !== '')
-  //   );
-  //   fetchTasks(cleanFilters);
-  // }, [fetchTasks]);
+  useEffect(() => {
+    if (onFilterChange) {
+      const cleanFilters = Object.fromEntries(
+        Object.entries(onFilterChange).filter(([, v]) => v !== '')
+      );
+      fetchTasks(cleanFilters);
+    }
+  }, [onFilterChange]);
 
-//    useEffect(() => {                                                                                                                           
-//      if (setOnFilterChange) {                                                                                                                  
-//     setOnFilterChange(() => handleFilterChange);                                                                                            
-//     }                                                                                                                                         
-//  }, [setOnFilterChange, handleFilterChange]);  
+  const handleFilterSearch = () => {
+    fetchTasks({ busqueda });
+  };
 
   const handleOpenModal = (task = null) => {
     setTaskToEdit(task);
@@ -129,8 +158,14 @@ const ListaTareas = ({toggleSidebar}) => {
   return (
     <div>
       <h2>Tareas</h2>
-      <Button onClick={() => handleOpenModal()}>Crear Nueva Tarea</Button> 
-      <ThemeToggleButton onClick={toggleSidebar}>☰</ThemeToggleButton>
+      <ActionContainer>
+        <Button onClick={() => handleOpenModal()}>Crear Nueva Tarea</Button>
+        <SeacrchContainer>
+          <SearchInput type="text" placeholder="Buscar..." id="busqueda" value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
+          <ThemeButton onClick={handleFilterSearch}>🔍</ThemeButton>
+        </SeacrchContainer>
+        <ThemeButton onClick={toggleSidebar}>ᯤ Filtro</ThemeButton>
+      </ActionContainer>
       <Table
         headers={taskHeaders}
         data={tasks}
@@ -156,9 +191,9 @@ const ListaTareas = ({toggleSidebar}) => {
           onClick={() => {
             handleCompleteTask(taskToView?.id, !taskToView?.completada);
             handleCloseViewModal();
-          }} 
+          }}
         >
-         {!taskToView?.completada ?  "Marcar como Completada" : "Marcar como Incompleta"}
+          {!taskToView?.completada ? "Marcar como Completada" : "Marcar como Incompleta"}
         </Button>
       </Modal>
 

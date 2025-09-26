@@ -18,8 +18,8 @@ const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
   const [categoriaId, setCategoriaId] = useState(initialData.categoria_id || '');
   const [errorFecha, setErrorFecha] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
-  const { tags, fetchTags } = useTags();
 
+  const { tags, fetchTags } = useTags();
   const { addTask, updateTask, isLoading, error } = useTareas();
   const { categories, fetchCategories } = useCategorias();
 

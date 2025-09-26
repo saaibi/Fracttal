@@ -38,11 +38,11 @@ const Aside = styled.aside`
 `;
 
 const Sidebar = ({ isOpen }) => {
-  const { onFilterChange } = useTareas();
+  const { setOnFilterChange } = useTareas();
 
   return (
     <Aside isOpen={isOpen}>
-      {<FiltroTareas onFilterChange={onFilterChange} />}
+      {<FiltroTareas onFilterChange={setOnFilterChange} />}
     </Aside>
   );
 };

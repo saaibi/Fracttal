@@ -28,6 +28,10 @@ const GlobalStyles = createGlobalStyle`
     font-size: 3.2em;
     line-height: 1.1;
   }
+  
+  h2 {
+    margin-top: 0;
+  }
 `;
 
 export default GlobalStyles;
