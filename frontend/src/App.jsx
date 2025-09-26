@@ -34,6 +34,9 @@ function App() {
   const [theme, setTheme] = useState(lightTheme);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
+  const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
+  const closeSidebar = () => setSidebarOpen(false);
+
   return (
     <ThemeProvider theme={theme}>
       <Container>
@@ -59,8 +62,12 @@ function App() {
               path="/"
               element={
                 <PrivateRoute>
-                  <Layout setTheme={setTheme} isSidebarOpen={isSidebarOpen}>
-                    <ListaTareas toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} />
+                  <Layout
+                    setTheme={setTheme}
+                    isSidebarOpen={isSidebarOpen}
+                    closeSidebar={closeSidebar}
+                  >
+                    <ListaTareas toggleSidebar={toggleSidebar} />
                   </Layout>
                 </PrivateRoute>
               }

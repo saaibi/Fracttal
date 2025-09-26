@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Button from './Button'; 
+import StyledCloseButton from './StyledCloseButton';
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -40,19 +40,6 @@ const ModalTitle = styled.h2`
   font-size: 1.5rem;
 `;
 
-const StyledCloseButton = styled(Button)` 
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: ${(props) => props.theme.colors.text};
-  width: auto; 
-  padding: 0; 
-
-  &:hover {
-    color: ${(props) => props.theme.colors.danger};
-  }
-`;
 
 const Modal = ({ isOpen, onClose, children, title }) => {
   if (!isOpen) return null;

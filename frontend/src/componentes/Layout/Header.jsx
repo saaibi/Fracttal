@@ -14,7 +14,6 @@ const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 300;
 
   h1 {
     margin: 0;

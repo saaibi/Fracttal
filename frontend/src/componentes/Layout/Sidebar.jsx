@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import FiltroTareas from '../Tarea/FiltroTareas';
 import { useTareas } from '../../hooks/useTareas';
+import StyledCloseButton from '../Comunes/StyledCloseButton';
 
 const Aside = styled.aside`
   position: absolute;
@@ -37,11 +38,16 @@ const Aside = styled.aside`
   }
 `;
 
-const Sidebar = ({ isOpen }) => {
+const CloseButton = styled(StyledCloseButton)`
+  position: absolute;
+`;
+
+const Sidebar = ({ isOpen, onClose }) => {
   const { setOnFilterChange } = useTareas();
 
   return (
     <Aside isOpen={isOpen}>
+      <CloseButton onClick={onClose}>&times;</CloseButton>
       {<FiltroTareas onFilterChange={setOnFilterChange} />}
     </Aside>
   );
