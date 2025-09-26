@@ -2,6 +2,32 @@
 
 This is a full-stack Fracttal application built with React (with Vite and Redux), Node.js, and PostgreSQL.
 
+## Users
+
+The application is multi-user, and each user can only see their own data (tasks, categories, and tags). This is enforced by checking the `usuario_id` on every database query.
+
+When you first run the application, two users are created by default:
+
+-   **User 1:**
+    -   **Email:** `test@example.com`
+    -   **Password:** `password123`
+-   **User 2:**
+    -   **Email:** `test2@example.com`
+    -   **Password:** `password123`
+
+You can register new users through the registration form in the application or by using the API.
+
+## API Documentation
+
+A complete API documentation is available in the `API_DOCUMENTATION.md` file. This file provides detailed information about all the available endpoints, including:
+
+-   HTTP Method
+-   Path
+-   Description
+-   Headers
+-   Request Body
+-   Success and Error Responses
+
 ## Project Setup with Docker
 
 **Note:** It is recommended to use the latest version of Docker to ensure compatibility with the Compose specification.
