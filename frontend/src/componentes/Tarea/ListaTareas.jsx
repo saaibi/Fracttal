@@ -78,7 +78,7 @@ const ListaTareas = ({ toggleSidebar }) => {
   const toggleGroup = (groupName) => {
     setCollapsedGroups(prev => ({ ...prev, [groupName]: !prev[groupName] }));
   };
-  
+
   const setPrioridadView = id => ({ 
     1: <StyleSpan priority="baja">Baja</StyleSpan>,
     2: <StyleSpan priority="media">Media</StyleSpan>, 
