@@ -1,25 +1,42 @@
 services:
   backend:
+    container_name: fracttal_backend
     build: ./backend
     ports:
       - "3000:3000"
     env_file:
-      - ./backend/back.env
+      - ./backend/.env.production
     depends_on:
       - db
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     networks:
       - app-network
 
   frontend:
+    container_name: fracttal_frontend
     build: ./frontend
     ports:
       - "8070:80"
     depends_on:
       - backend
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -I http://127.0.0.1 | grep -q 'HTTP/1.1 200 OK'"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     networks:
       - app-network
 
   db:
+    container_name: fracttal_database
     image: postgres:13
     environment:
       POSTGRES_USER: fracttal_user
@@ -31,6 +48,11 @@ services:
       - postgres-data:/var/lib/postgresql/data
       - ./db/database.sql:/docker-entrypoint-initdb.d/1init.sql
       - ./db/data.sql:/docker-entrypoint-initdb.d/2data.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fracttal_user -d fracttal_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - app-network
 

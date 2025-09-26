@@ -18,15 +18,17 @@ const authRoutes = require('./routes/auth');
 const tasksRoutes = require('./routes/tasks');
 const categoriesRoutes = require('./routes/categories');
 const tagsRoutes = require('./routes/tags');
+const healthRoutes = require('./routes/health');
 
 // Configure CORS
 app.use(cors({
-  origin: 'http://localhost:8070', 
+  origin:  process.env.ALLOWED_ORIGINS, 
   credentials: true, 
 }));
 
 app.use(express.json());
 
+app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/tareas', tasksRoutes);
 app.use('/api/categorias', categoriesRoutes);

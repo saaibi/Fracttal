@@ -1,6 +1,6 @@
 
-INSERT INTO fracttaldb.usuarios (id, nombre, email, password) VALUES
-(1, 'Test User', 'test@example.com', '$2b$10$JyxmcQedNsG/GnlvMaYR5OyDjQD86ctG1awEQgC9soe51rAggzwwC') ON CONFLICT (id) DO NOTHING;
+INSERT INTO fracttaldb.usuarios (nombre, email, password) VALUES
+('Test User', 'test@example.com', '$2b$10$JyxmcQedNsG/GnlvMaYR5OyDjQD86ctG1awEQgC9soe51rAggzwwC');
 
 
 INSERT INTO fracttaldb.categorias (id, nombre, usuario_id) VALUES
@@ -132,7 +132,7 @@ INSERT INTO fracttaldb.tarea_etiquetas (tarea_id, etiqueta_id) VALUES
 (232, 301),
 (232, 302) ON CONFLICT (tarea_id, etiqueta_id) DO NOTHING;
 
-INSERT INTO fracttaldb.usuarios (id, nombre, email, password) VALUES (2, 'Test User 2', 'test2@example.com', '$2b$10$JyxmcQedNsG/GnlvMaYR5OyDjQD86ctG1awEQgC9soe51rAggzwwC') ON CONFLICT (id) DO NOTHING;
+INSERT INTO fracttaldb.usuarios (nombre, email, password) VALUES ('Test User 2', 'test2@example.com', '$2b$10$JyxmcQedNsG/GnlvMaYR5OyDjQD86ctG1awEQgC9soe51rAggzwwC') ON CONFLICT (email) DO NOTHING;
 INSERT INTO fracttaldb.categorias (id, nombre, usuario_id) VALUES (201, 'Category 1 User 2', 2) ON CONFLICT (id) DO NOTHING;
 INSERT INTO fracttaldb.categorias (id, nombre, usuario_id) VALUES (202, 'Category 2 User 2', 2) ON CONFLICT (id) DO NOTHING;
 INSERT INTO fracttaldb.categorias (id, nombre, usuario_id) VALUES (203, 'Category 3 User 2', 2) ON CONFLICT (id) DO NOTHING;
