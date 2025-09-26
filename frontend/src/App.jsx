@@ -6,6 +6,7 @@ import FormularioRegistro from './componentes/Auth/FormularioRegistro';
 import ListaTareas from './componentes/Tarea/ListaTareas';
 import ListaCategorias from './componentes/Categoria/ListaCategorias';
 import ListaEtiquetas from './componentes/Etiqueta/ListaEtiquetas';
+import Dashboard from './componentes/Dashboard';
 import { useAuth } from './hooks/useAuth';
 import styled, { ThemeProvider } from 'styled-components';
 import { lightTheme } from './theme';
@@ -90,6 +91,16 @@ function App() {
                   <PrivateRoute>
                     <Layout setTheme={setTheme}>
                       <ListaEtiquetas />
+                    </Layout>
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <PrivateRoute>
+                    <Layout setTheme={setTheme}>
+                      <Dashboard />
                     </Layout>
                   </PrivateRoute>
                 }

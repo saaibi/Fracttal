@@ -4,7 +4,7 @@ import { SnackbarContext } from '../contexto/SnackbarContext';
 export const useSnackbar = () => {
   const context = useContext(SnackbarContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useSnackbar must be used within an SnackbarContext');
   }
   return context;
 };

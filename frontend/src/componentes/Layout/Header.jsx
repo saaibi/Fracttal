@@ -124,6 +124,7 @@ const Header = ({ setTheme }) => {
             <NavLink onClick={() => close()} to="/">Tareas</NavLink>
             <NavLink onClick={() => close()} to="/categorias">Categorias</NavLink>
             <NavLink onClick={() => close()} to="/tags">Etiquetas</NavLink>
+            <NavLink onClick={() => close()} to="/dashboard">Dashboard</NavLink>
           </div>
         )}
       />
@@ -133,6 +134,7 @@ const Header = ({ setTheme }) => {
           <li><NavLink to="/" end className={({ isActive }) => isActive ? "active" : ""}>Tareas</NavLink></li>
           <li><NavLink to="/categorias" className={({ isActive }) => isActive ? "active" : ""}>Categorias</NavLink></li>
           <li><NavLink to="/tags" className={({ isActive }) => isActive ? "active" : ""}>Etiquetas</NavLink></li>
+          <li><NavLink to="/dashboard" className={({ isActive }) => isActive ? "active" : ""}>Dashboard</NavLink></li>
         </NavLinks>
       </Nav>
       <HeaderActions>
