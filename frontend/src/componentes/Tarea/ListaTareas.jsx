@@ -48,20 +48,20 @@ const StyleSpan = styled.span`
   color: ${({ theme, priority }) => {
     switch (priority) {
       case "baja":
-        return  theme.colors.info;
+        return theme.colors.info;
       case "media":
         return theme.colors.warning;
       case "alta":
         return theme.colors.danger;
       default:
-         return theme.colors.primary
+        return theme.colors.primary
     }
   }};
 `
 
 const StyleTr = styled.tr`
  cursor: pointer;
- background-color: ${({theme}) => theme.colors.primary} !important;
+ background-color: ${({ theme }) => theme.colors.primary} !important;
 `
 
 const ListaTareas = ({ toggleSidebar }) => {
@@ -72,7 +72,7 @@ const ListaTareas = ({ toggleSidebar }) => {
   const [taskIdToDelete, setTaskIdToDelete] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [taskToView, setTaskToView] = useState(null);
-  const [busqueda, setBusqueda] = useState('');
+  const [busqueda, setBusqueda] = useState(undefined);
   const [groupBy, setGroupBy] = useState(null);
   const [collapsedGroups, setCollapsedGroups] = useState({});
 
@@ -80,16 +80,16 @@ const ListaTareas = ({ toggleSidebar }) => {
     setCollapsedGroups(prev => ({ ...prev, [groupName]: !prev[groupName] }));
   };
 
-  const setPrioridadView = id => ({ 
+  const setPrioridadView = id => ({
     1: <StyleSpan priority="baja">Baja</StyleSpan>,
-    2: <StyleSpan priority="media">Media</StyleSpan>, 
-    3: <StyleSpan priority="alta">Alta</StyleSpan>, 
+    2: <StyleSpan priority="media">Media</StyleSpan>,
+    3: <StyleSpan priority="alta">Alta</StyleSpan>,
   }[id] || '');
 
-  const setPrioridad = id => ({ 
+  const setPrioridad = id => ({
     1: "Baja",
-    2: "Media", 
-    3: "Alta", 
+    2: "Media",
+    3: "Alta",
   }[id] || '');
 
   const { tableData, currentHeaders, headerToKey } = useMemo(() => {
@@ -161,8 +161,10 @@ const ListaTareas = ({ toggleSidebar }) => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetchTasks({ busqueda });
-    }, 1500);
+      if (busqueda !== undefined) {
+        fetchTasks({ busqueda });
+      }
+    }, 1200);
 
     return () => {
       clearTimeout(timer);
@@ -334,7 +336,7 @@ const ListaTareas = ({ toggleSidebar }) => {
           />
         </div>
         <SeacrchContainer>
-          <SearchInput type="text" placeholder="Buscar..." id="busqueda" value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
+          <SearchInput type="text" placeholder="Buscar..." id="busqueda" value={busqueda || ''} onChange={(e) => setBusqueda(e.target.value)} />
         </SeacrchContainer>
         <div>
           <ThemeButton onClick={handleExportCSV}>📥 CSV</ThemeButton>
