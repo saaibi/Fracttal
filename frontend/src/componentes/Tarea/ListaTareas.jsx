@@ -158,9 +158,15 @@ const ListaTareas = ({ toggleSidebar }) => {
     }
   }, [onFilterChange]);
 
-  const handleFilterSearch = () => {
-    fetchTasks({ busqueda });
-  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchTasks({ busqueda });
+    }, 1500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [busqueda]);
 
   const handleOpenModal = (task = null) => {
     setTaskToEdit(task);
@@ -321,7 +327,6 @@ const ListaTareas = ({ toggleSidebar }) => {
         </div>
         <SeacrchContainer>
           <SearchInput type="text" placeholder="Buscar..." id="busqueda" value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
-          <ThemeButton onClick={handleFilterSearch}>🔍</ThemeButton>
         </SeacrchContainer>
         <div>
           <ThemeButton onClick={handleExportCSV}>📥 CSV</ThemeButton>
