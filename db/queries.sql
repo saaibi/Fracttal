@@ -1,5 +1,5 @@
--- 1. User Engagement Analysis
--- What is the average number of tasks created per user in the last 30 days, and how does it compare to the previous 30 days?
+-- 1. Análisis de Participación de Usuarios
+--  ¿Cuál es el promedio de tareas creadas por usuario en los últimos 30 días, y cómo se compara con los 30 días anteriores?
 WITH user_tasks_last_30_days AS (
     SELECT
         u.id AS user_id,
@@ -22,8 +22,8 @@ SELECT
     (SELECT AVG(task_count) FROM user_tasks_last_30_days) AS avg_tasks_last_30_days,
     (SELECT AVG(task_count) FROM user_tasks_prev_30_days) AS avg_tasks_prev_30_days;
 
--- 2. Completion Rate Trends
--- What is the daily task completion rate over the last 90 days, grouped by priority level?
+-- 2. Tendencias de Tasa de Completado
+-- ¿Cuál es la tasa de completado diaria de tareas en los últimos 90 días, agrupada por nivel de prioridad?
 SELECT
     DATE(creado_en) AS completion_date,
     prioridad,
@@ -35,8 +35,8 @@ WHERE creado_en >= NOW() - INTERVAL '90 days'
 GROUP BY completion_date, prioridad
 ORDER BY completion_date, prioridad;
 
--- 3. Category Performance
--- Which categories have the highest and lowest completion rates, and what is the average completion time for each category?
+-- 3. Rendimiento por Categoría
+-- ¿Qué categorías tienen las tasas de completado más altas y más bajas, y cuál es el tiempo promedio de completado para cada categoría?
 WITH category_performance AS (
     SELECT
         c.nombre AS category_name,
@@ -51,8 +51,8 @@ WITH category_performance AS (
 SELECT * FROM category_performance
 ORDER BY completion_rate DESC;
 
--- 4. User Productivity Patterns
--- What are the peak hours and days of the week when users create more tasks, and when do they complete them?
+-- 4. Patrones de Productividad del Usuario
+-- ¿Cuáles son las horas pico y días de la semana cuando los usuarios crean más tareas, y cuándo las completan?
 SELECT
     EXTRACT(DOW FROM creado_en) AS day_of_week,
     EXTRACT(HOUR FROM creado_en) AS hour_of_day,
@@ -70,8 +70,8 @@ WHERE completada = TRUE
 GROUP BY day_of_week, hour_of_day
 ORDER BY tasks_completed DESC;
 
--- 5. Overdue Task Analysis
--- How many tasks are currently overdue, grouped by user and category, and what is the average number of days they are overdue?
+-- 5. Análisis de Tareas Vencidas
+-- ¿Cuántas tareas están actualmente vencidas, agrupadas por usuario y categoría, y cuál es el promedio de días que están vencidas?
 SELECT
     u.nombre AS user_name,
     c.nombre AS category_name,
@@ -84,8 +84,8 @@ WHERE t.completada = FALSE AND t.fecha_vencimiento < NOW()::date
 GROUP BY u.nombre, c.nombre
 ORDER BY overdue_tasks DESC;
 
--- 6. Tag Usage Statistics
--- What are the most frequently used tags, and which tags are associated with the highest completion rates?
+-- 6. Estadísticas de Uso de Etiquetas
+-- ¿Cuáles son las etiquetas más frecuentemente utilizadas, y qué etiquetas están asociadas con las tasas de completado más altas?
 WITH tag_usage AS (
     SELECT
         e.nombre AS tag_name,
@@ -112,8 +112,8 @@ FROM tag_usage tu
 JOIN tag_completion tc ON tu.tag_name = tc.tag_name
 ORDER BY tu.usage_count DESC;
 
--- 7. User Retention Metrics
--- How many users have created at least one task in each of the last 4 weeks, and what is the week-over-week retention rate?
+-- 7. Métricas de Retención de Usuarios
+-- ¿Cuántos usuarios han creado al menos una tarea en cada una de las últimas 4 semanas, y cuál es la tasa de retención semana a semana?
 WITH weekly_active_users AS (
     SELECT
         DISTINCT usuario_id,
@@ -130,8 +130,8 @@ LEFT JOIN weekly_active_users w2 ON w1.usuario_id = w2.usuario_id AND w1.week_nu
 GROUP BY w1.week_number
 ORDER BY w1.week_number;
 
--- 8. Priority Distribution Analysis
--- What is the distribution of tasks across priority levels for active users (users who have logged in in the last 7 days)?
+-- 8. Análisis de Distribución de Prioridad
+-- ¿Cuál es la distribución de tareas a través de los niveles de prioridad para usuarios activos (usuarios que han iniciado sesión en los últimos 7 días)?
 SELECT
     prioridad,
     COUNT(*) AS task_count
@@ -142,8 +142,8 @@ WHERE usuario_id IN (
 GROUP BY prioridad
 ORDER BY prioridad;
 
--- 9. Seasonal Trends
--- How does task creation and completion vary by month over the last year, and are there any seasonal patterns?
+-- 9. Tendencias Estacionales
+-- ¿Cómo varía la creación y completado de tareas por mes en el último año, y hay algún patrón estacional?
 SELECT
     TO_CHAR(creado_en, 'YYYY-MM') AS month,
     COUNT(*) AS tasks_created,
@@ -153,8 +153,8 @@ WHERE creado_en >= NOW() - INTERVAL '1 year'
 GROUP BY month
 ORDER BY month;
 
--- 10. Performance Benchmarking
--- What users are in the top 10% for task completion rate, and what is the average number of tasks they handle concurrently?
+-- 10. Benchmarking de Rendimiento
+-- ¿Qué usuarios están en el 10% superior por tasa de completado de tareas, y cuál es el número promedio de tareas que manejan simultáneamente?
 WITH user_completion_rates AS (
     SELECT
         usuario_id,

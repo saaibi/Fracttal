@@ -500,3 +500,91 @@ All task routes are protected and require authentication.
 - **Description:** Checks the health of the API and database connection.
 - **Response (200 OK):** `OK`
 - **Response (500 Internal Server Error):** `Database connection failed`
+
+## Business Intelligence
+All Business Intelligence routes are protected and require authentication.
+
+### Get BI Query
+- **Method:** `GET`
+- **Path:** `/api/bi/:queryName`
+- **Description:** Executes a pre-defined BI query.
+- **Headers:**
+  - `Authorization`: `Bearer <token>`
+- **Path Parameters:**
+  - `queryName`: The name of the query to execute.
+- **Available Queries:**
+  - `userParticipationAnalysis`
+  - `completionRateTrends`
+  - `categoryPerformance`
+  - `userProductivityPatterns`
+  - `overdueTaskAnalysis`
+  - `tagUsageStatistics`
+  - `userRetentionMetrics`
+  - `priorityDistributionAnalysis`
+  - `seasonalTrends`
+  - `performanceBenchmarking`
+- **Response (200 OK):**
+  ```json
+  [
+    {
+      "column1": "value1",
+      "column2": "value2"
+    }
+  ]
+  ```
+- **Response (404 Not Found):**
+    ```json
+    {
+        "error": "Query not found"
+    }
+    ```
+- **Response (500 Internal Server Error):**
+  ```json
+  {
+    "error": "string"
+  }
+  ```
+
+### Post BI Query
+- **Method:** `POST`
+- **Path:** `/api/bi/query`
+- **Description:** Executes a dynamic BI query.
+- **Headers:**
+  - `Authorization`: `Bearer <token>`
+- **Request Body:**
+  ```json
+  {
+    "model": "string",
+    "dimensions": ["string"],
+    "measures": ["string"],
+    "filters": [
+      {
+        "dimension": "string",
+        "operator": "string",
+        "value": "any"
+      }
+    ]
+  }
+  ```
+- **Response (200 OK):**
+    ```json
+    [
+        {
+            "column1": "value1",
+            "column2": "value2"
+        }
+    ]
+    ```
+- **Response (400 Bad Request):**
+    ```json
+    {
+        "error": "Invalid model" or "Invalid dimensions" or "Invalid measures"
+    }
+    ```
+- **Response (500 Internal Server Error):**
+    ```json
+    {
+        "error": "string"
+    }
+    ```
+

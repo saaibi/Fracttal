@@ -19,6 +19,7 @@ const tasksRoutes = require('./routes/tasks');
 const categoriesRoutes = require('./routes/categories');
 const tagsRoutes = require('./routes/tags');
 const healthRoutes = require('./routes/health');
+const biRoutes = require('./routes/bi');
 
 // Configure CORS
 app.use(cors({
@@ -33,6 +34,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/tareas', tasksRoutes);
 app.use('/api/categorias', categoriesRoutes);
 app.use('/api/etiquetas', tagsRoutes);
+app.use('/api/bi', biRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
