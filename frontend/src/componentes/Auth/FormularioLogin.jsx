@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // Import useNavigate and Link
+import React, { useEffect, useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import Button from '../../componentes/Comunes/Button';
-import FormGroup from '../../componentes/Comunes/FormGroup'; 
-import ErrorText from '../../componentes/Comunes/ErrorText'; 
+import FormGroup from '../../componentes/Comunes/FormGroup';
+import ErrorText from '../../componentes/Comunes/ErrorText';
 import LoadingText from '../../componentes/Comunes/LoadingText';
-import FormContainer from '../../componentes/Comunes/FormContainer'; 
+import FormContainer from '../../componentes/Comunes/FormContainer';
 import Form from '../../componentes/Comunes/Form';
 import styled from 'styled-components';
+import { useSnackbar } from '../../hooks/useSnackbar';
 
 const RegisterButtonContainer = styled.div`
   margin-top: 1rem;
@@ -18,13 +19,20 @@ const FormularioLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, isLoading, error } = useAuth();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const { showSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    if (error) {
+      showSnackbar(error, 'danger')
+    }
+  }, [error]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const success = await login({ email, password });
     if (success) {
-      navigate('/'); 
+      navigate('/');
     }
   };
 

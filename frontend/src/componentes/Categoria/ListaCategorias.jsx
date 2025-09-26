@@ -7,19 +7,25 @@ import Button from '../Comunes/Button';
 import Table from '../Comunes/Table';
 import ActionButtons from '../Comunes/ActionButtons';
 import LoadingText from '../Comunes/LoadingText';
-import ErrorText from '../Comunes/ErrorText';
+import { useSnackbar } from '../../hooks/useSnackbar';
 
 const ListaCategorias = () => {
+  const { showSnackbar } = useSnackbar();
   const { categories, isLoading, error, fetchCategories, deleteCategory } = useCategorias();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmAlertOpen, setIsConfirmAlertOpen] = useState(false);
   const [categoryIdToDelete, setCategoryIdToDelete] = useState(null);
   const [categoryToEdit, setCategoryToEdit] = useState(null);
 
-
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    if (error) {
+      showSnackbar(error, 'danger')
+    }
+  }, [error]);
 
   const handleOpenModal = (category = null) => {
     setCategoryToEdit(category);
@@ -39,7 +45,10 @@ const ListaCategorias = () => {
 
   const handleConfirmDelete = async () => {
     if (categoryIdToDelete) {
-      await deleteCategory(categoryIdToDelete);
+      const success = await deleteCategory(categoryIdToDelete);
+      if (success) {
+        showSnackbar('Se elimino la categoria correctamente!')
+      }
       fetchCategories();
       setCategoryIdToDelete(null);
       setIsConfirmAlertOpen(false);
@@ -68,7 +77,6 @@ const ListaCategorias = () => {
   );
 
   if (isLoading) return <LoadingText>Cargando categorías...</LoadingText>;
-  if (error) return <ErrorText>{error}</ErrorText>;
 
   return (
     <div>

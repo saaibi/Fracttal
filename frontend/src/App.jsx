@@ -9,6 +9,7 @@ import ListaEtiquetas from './componentes/Etiqueta/ListaEtiquetas';
 import { useAuth } from './hooks/useAuth';
 import styled, { ThemeProvider } from 'styled-components';
 import { lightTheme } from './theme';
+import { SnackbarProvider } from './contexto/SnackbarContext';
 
 const Container = styled.div`
   max-width: 100%;
@@ -39,62 +40,64 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container>
-        <Router>
-          <Routes>
-            <Route
-              path="/login"
-              element={
-                <CenteredContent>
-                  <FormularioLogin />
-                </CenteredContent>
-              }
-            />
-            <Route
-              path="/register"
-              element={
-                <CenteredContent>
-                  <FormularioRegistro />
-                </CenteredContent>
-              }
-            />
-            <Route
-              path="/"
-              element={
-                <PrivateRoute>
-                  <Layout
-                    setTheme={setTheme}
-                    isSidebarOpen={isSidebarOpen}
-                    closeSidebar={closeSidebar}
-                  >
-                    <ListaTareas toggleSidebar={toggleSidebar} />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/categorias"
-              element={
-                <PrivateRoute>
-                  <Layout setTheme={setTheme}>
-                    <ListaCategorias />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/tags"
-              element={
-                <PrivateRoute>
-                  <Layout setTheme={setTheme}>
-                    <ListaEtiquetas />
-                  </Layout>
-                </PrivateRoute>
-              }
-            />
-          </Routes>
-        </Router>
-      </Container>
+      <SnackbarProvider>
+        <Container>
+          <Router>
+            <Routes>
+              <Route
+                path="/login"
+                element={
+                  <CenteredContent>
+                    <FormularioLogin />
+                  </CenteredContent>
+                }
+              />
+              <Route
+                path="/register"
+                element={
+                  <CenteredContent>
+                    <FormularioRegistro />
+                  </CenteredContent>
+                }
+              />
+              <Route
+                path="/"
+                element={
+                  <PrivateRoute>
+                    <Layout
+                      setTheme={setTheme}
+                      isSidebarOpen={isSidebarOpen}
+                      closeSidebar={closeSidebar}
+                    >
+                      <ListaTareas toggleSidebar={toggleSidebar} />
+                    </Layout>
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/categorias"
+                element={
+                  <PrivateRoute>
+                    <Layout setTheme={setTheme}>
+                      <ListaCategorias />
+                    </Layout>
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/tags"
+                element={
+                  <PrivateRoute>
+                    <Layout setTheme={setTheme}>
+                      <ListaEtiquetas />
+                    </Layout>
+                  </PrivateRoute>
+                }
+              />
+            </Routes>
+          </Router>
+        </Container>
+      </SnackbarProvider>
     </ThemeProvider>
   );
 }

@@ -6,7 +6,6 @@ import Table from '../Comunes/Table';
 import Button from '../Comunes/Button';
 import ActionButtons from '../Comunes/ActionButtons';
 import LoadingText from '../Comunes/LoadingText';
-import ErrorText from '../Comunes/ErrorText';
 import Modal from '../Comunes/Modal';
 import ConfirmAlert from '../Comunes/ConfirmAlert';
 import Chip from '../Comunes/Chip';
@@ -14,6 +13,7 @@ import FormularioTarea from './FormularioTarea';
 import DetalleTarea from './DetalleTarea';
 import ThemeToggleButton from '../Comunes/ThemeToggleButton';
 import Popover from '../Comunes/Popover';
+import { useSnackbar } from '../../hooks/useSnackbar';
 
 const ActionContainer = styled.div`
   display: flex;
@@ -81,6 +81,7 @@ const StyleTr = styled.tr`
 `
 
 const ListaTareas = ({ toggleSidebar }) => {
+  const { showSnackbar } = useSnackbar();
   const { tasks, fetchTasks, deleteTask, completeTask, isLoading, error, onFilterChange } = useTareas();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
@@ -187,6 +188,12 @@ const ListaTareas = ({ toggleSidebar }) => {
     };
   }, [busqueda]);
 
+  useEffect(() => {
+    if (error) {
+      showSnackbar(error, 'danger')
+    }
+  }, [error]);
+
   const handleOpenModal = (task = null) => {
     setTaskToEdit(task);
     setIsModalOpen(true);
@@ -204,7 +211,10 @@ const ListaTareas = ({ toggleSidebar }) => {
 
   const handleConfirmDelete = async () => {
     if (taskIdToDelete) {
-      await deleteTask(taskIdToDelete);
+      const success = await deleteTask(taskIdToDelete);
+      if (success) {
+        showSnackbar('Se elimino la tarea correctamente!')
+      }
       fetchTasks();
       setTaskIdToDelete(null);
       setIsConfirmAlertOpen(false);
@@ -330,7 +340,6 @@ const ListaTareas = ({ toggleSidebar }) => {
   };
 
   if (isLoading) return <LoadingText>Cargando tareas...</LoadingText>;
-  if (error) return <ErrorText>{error}</ErrorText>;
 
   return (
     <div>

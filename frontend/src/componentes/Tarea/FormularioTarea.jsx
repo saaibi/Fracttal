@@ -7,8 +7,10 @@ import ErrorText from '../Comunes/ErrorText';
 import LoadingText from '../Comunes/LoadingText';
 import Form from '../Comunes/Form';
 import { useTags } from '../../hooks/useTags';
+import { useSnackbar } from '../../hooks/useSnackbar';
 
 const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
+  const { showSnackbar } = useSnackbar();
   const today = new Date().toISOString().split('T')[0];
   const [titulo, setTitulo] = useState(initialData.titulo || '');
   const [descripcion, setDescripcion] = useState(initialData.descripcion || '');
@@ -20,7 +22,7 @@ const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
   const [selectedTags, setSelectedTags] = useState([]);
 
   const { tags, fetchTags } = useTags();
-  const { addTask, updateTask, isLoading, error } = useTareas();
+  const { addTask, updateTask, isLoading } = useTareas();
   const { categories, fetchCategories } = useCategorias();
 
 
@@ -69,9 +71,9 @@ const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
 
     try {
       if (initialData.id) {
-        await updateTask(initialData.id, taskData);
+        updateTask(initialData.id, taskData).then(()=> showSnackbar('Se actualizo la tarea correctamente!'));
       } else {
-        await addTask(taskData);
+        addTask(taskData).then(()=> showSnackbar('Se creo la tarea correctamente!'));
       }
       onSave();
     } catch (err) {
@@ -131,7 +133,6 @@ const FormularioTarea = ({ initialData = {}, onSave, isNewTask }) => {
         {initialData.id ? 'Actualizar Tarea' : 'Crear Tarea'}
       </Button>
       {isLoading && <LoadingText>Guardando...</LoadingText>}
-      {error && <ErrorText>{error}</ErrorText>}
     </Form>
   );
 };

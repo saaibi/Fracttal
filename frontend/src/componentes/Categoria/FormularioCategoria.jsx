@@ -3,17 +3,19 @@ import { useCategorias } from '../../hooks/useCategorias';
 import Button from '../../componentes/Comunes/Button';
 import FormGroup from '../../componentes/Comunes/FormGroup';
 import Form from '../../componentes/Comunes/Form';
+import { useSnackbar } from '../../hooks/useSnackbar';
 
 const FormularioCategoria = ({ initialData = {}, onSave }) => {
   const [nombre, setNombre] = useState(initialData.nombre || '');
   const { createCategory, updateCategory, isLoading } = useCategorias();
+  const { showSnackbar } = useSnackbar();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (initialData.id) {
-      await updateCategory(initialData.id, { nombre });
+      updateCategory(initialData.id, { nombre }).then(()=> showSnackbar('Se actualizo la categoria correctamente!'));
     } else {
-      await createCategory({ nombre });
+      createCategory({ nombre }).then(()=> showSnackbar('Se creo la categoria correctamente!'));
     }
     onSave();
   };

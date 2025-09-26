@@ -5,15 +5,22 @@ import FormularioEtiqueta from './FormularioEtiqueta';
 import Button from '../Comunes/Button';
 import Table from '../Comunes/Table';
 import LoadingText from '../Comunes/LoadingText';
-import ErrorText from '../Comunes/ErrorText';
+import { useSnackbar } from '../../hooks/useSnackbar';
 
 const ListaEtiquetas = () => {
-  const { tags, isLoading, error, fetchTags } = useTags();
+  const { tags, isLoading, fetchTags, error } = useTags();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
     fetchTags();
   }, []);
+
+  useEffect(() => {
+      if (error) {
+        showSnackbar(error, 'danger')
+      }
+  }, [error]);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => {
@@ -32,8 +39,7 @@ const ListaEtiquetas = () => {
   );
 
   if (isLoading) return <LoadingText>Cargando etiquetas...</LoadingText>;
-  if (error) return <ErrorText>{error}</ErrorText>;
-
+ 
   return (
     <div>
       <h2>Etiquetas</h2>
