@@ -1,6 +1,6 @@
 
 INSERT INTO fracttaldb.usuarios (id, nombre, email, password) VALUES
-(1, 'Test User', 'saaibiflorezhernandez@gmail.com', '$2b$10$JyxmcQedNsG/GnlvMaYR5OyDjQD86ctG1awEQgC9soe51rAggzwwC') ON CONFLICT (id) DO NOTHING;
+(1, 'Test User', 'test@example.com', '$2b$10$JyxmcQedNsG/GnlvMaYR5OyDjQD86ctG1awEQgC9soe51rAggzwwC') ON CONFLICT (id) DO NOTHING;
 
 
 INSERT INTO fracttaldb.categorias (id, nombre, usuario_id) VALUES

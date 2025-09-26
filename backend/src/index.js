@@ -2,6 +2,17 @@ const express = require('express');
 const cors = require('cors'); 
 const app = express();
 const port = process.env.PORT || 3000;
+const rateLimit = require('express-rate-limit');
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 100, 
+  standardHeaders: true, 
+  legacyHeaders: false, 
+});
+
+app.use(limiter);
 
 const authRoutes = require('./routes/auth');
 const tasksRoutes = require('./routes/tasks');
