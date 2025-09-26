@@ -13,6 +13,7 @@ import Chip from '../Comunes/Chip';
 import FormularioTarea from './FormularioTarea';
 import DetalleTarea from './DetalleTarea';
 import ThemeToggleButton from '../Comunes/ThemeToggleButton';
+import Popover from '../Comunes/Popover';
 
 const ActionContainer = styled.div`
   display: flex;
@@ -321,9 +322,16 @@ const ListaTareas = ({ toggleSidebar }) => {
           <Button onClick={() => handleOpenModal()}>╋</Button>
           <ThemeButton onClick={() => fetchTasks()}>⟳ Refrescar</ThemeButton>
           <ThemeButton onClick={toggleSidebar}>ᯤ Filtro</ThemeButton>
-          <ThemeButton onClick={() => setGroupBy('categoria')}>🗂️ Categoria</ThemeButton>
-          <ThemeButton onClick={() => setGroupBy('prioridad')}>🗂️ Prioridad</ThemeButton>
-          {groupBy && <ThemeButton onClick={() => setGroupBy(null)}>❌</ThemeButton>}
+          <Popover
+            trigger={<ThemeButton>🗂️ Agrupar</ThemeButton>}
+            content={({ close }) => (
+              <div>
+                <a onClick={() => { setGroupBy('categoria'); close(); }}>Categoría</a>
+                <a onClick={() => { setGroupBy('prioridad'); close(); }}>Prioridad</a>
+                {groupBy && <a onClick={() => { setGroupBy(null); close(); }}>Quitar</a>}
+              </div>
+            )}
+          />
         </div>
         <SeacrchContainer>
           <SearchInput type="text" placeholder="Buscar..." id="busqueda" value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
