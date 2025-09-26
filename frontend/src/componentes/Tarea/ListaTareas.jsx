@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
 import { useTareas } from '../../hooks/useTareas';
@@ -43,6 +43,26 @@ const ThemeButton = styled(ThemeToggleButton)`
   }
 `;
 
+const StyleSpan = styled.span`
+  color: ${({ theme, priority }) => {
+    switch (priority) {
+      case "baja":
+        return  theme.colors.info;
+      case "media":
+        return theme.colors.warning;
+      case "alta":
+        return theme.colors.danger;
+      default:
+         return theme.colors.primary
+    }
+  }};
+`
+
+const StyleTr = styled.tr`
+ cursor: pointer;
+ background-color: ${({theme}) => theme.colors.primary} !important;
+`
+
 const ListaTareas = ({ toggleSidebar }) => {
   const { tasks, fetchTasks, deleteTask, completeTask, isLoading, error, onFilterChange } = useTareas();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,6 +72,78 @@ const ListaTareas = ({ toggleSidebar }) => {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [taskToView, setTaskToView] = useState(null);
   const [busqueda, setBusqueda] = useState('');
+  const [groupBy, setGroupBy] = useState(null);
+  const [collapsedGroups, setCollapsedGroups] = useState({});
+
+  const toggleGroup = (groupName) => {
+    setCollapsedGroups(prev => ({ ...prev, [groupName]: !prev[groupName] }));
+  };
+  
+  const setPrioridadView = id => ({ 
+    1: <StyleSpan priority="baja">Baja</StyleSpan>,
+    2: <StyleSpan priority="media">Media</StyleSpan>, 
+    3: <StyleSpan priority="alta">Alta</StyleSpan>, 
+  }[id] || '');
+
+  const setPrioridad = id => ({ 
+    1: "Baja",
+    2: "Media", 
+    3: "Alta", 
+  }[id] || '');
+
+  const { tableData, currentHeaders, headerToKey } = useMemo(() => {
+    const baseHeaders = ['ID', 'Título', 'Descripción', 'Fecha Vencimiento', 'Prioridad', 'Lote', 'Completada', 'Categoria', 'Etiquetas', 'Acciones'];
+    const baseHeaderToKey = {
+      'ID': 'id',
+      'Título': 'titulo',
+      'Descripción': 'descripcion',
+      'Fecha Vencimiento': 'fecha_vencimiento',
+      'Prioridad': 'prioridad',
+      'Lote': 'lote',
+      'Completada': 'completada',
+      'Categoria': 'categoria_nombre',
+      'Etiquetas': 'etiquetas',
+    };
+
+    if (!groupBy) {
+      return { tableData: tasks, currentHeaders: baseHeaders, headerToKey: baseHeaderToKey };
+    }
+
+    const currentHeaders = baseHeaders.filter(h => h.toLowerCase() !== groupBy);
+
+    const sortedTasks = [...tasks].sort((a, b) => {
+      let aGroup, bGroup;
+      if (groupBy === 'categoria') {
+        aGroup = a.categoria_nombre || 'Sin Categoría';
+        bGroup = b.categoria_nombre || 'Sin Categoría';
+      } else if (groupBy === 'prioridad') {
+        aGroup = setPrioridad(a.prioridad);
+        bGroup = setPrioridad(b.prioridad);
+      }
+      if (aGroup < bGroup) return -1;
+      if (aGroup > bGroup) return 1;
+      return 0;
+    });
+
+    const tableData = [];
+    let lastGroup = null;
+    sortedTasks.forEach(task => {
+      let currentGroup;
+      if (groupBy === 'categoria') {
+        currentGroup = task.categoria_nombre || 'Sin Categoría';
+      } else if (groupBy === 'prioridad') {
+        currentGroup = setPrioridad(task.prioridad);
+      }
+
+      if (currentGroup !== lastGroup) {
+        tableData.push({ isGroup: true, name: currentGroup });
+        lastGroup = currentGroup;
+      }
+      tableData.push(task);
+    });
+
+    return { tableData, currentHeaders, headerToKey: baseHeaderToKey };
+  }, [tasks, groupBy]);
 
   useEffect(() => {
     fetchTasks();
@@ -115,7 +207,7 @@ const ListaTareas = ({ toggleSidebar }) => {
   };
 
   const handleExportCSV = () => {
-    const headers = taskHeaders.filter(h => h !== 'Acciones');
+    const headers = currentHeaders.filter(h => h !== 'Acciones');
     const csvRows = [
       headers.join(','),
     ];
@@ -151,45 +243,66 @@ const ListaTareas = ({ toggleSidebar }) => {
     link.click();
   };
 
-  const setPrioridad = id => ({ 1: "Baja", 2: "Media", 3: "Alta", }[id] || '');
+  const renderRow = (item) => {
+    if (item.isGroup) {
+      return (
+        <StyleTr key={item.name} onClick={() => toggleGroup(item.name)}>
+          <td colSpan={currentHeaders.length}>
+            <strong>{item.name}</strong> ({collapsedGroups[item.name] ? '+' : '-'})
+          </td>
+        </StyleTr>
+      );
+    }
 
-  const taskHeaders = ['ID', 'Título', 'Descripción', 'Fecha Vencimiento', 'Prioridad', 'Lote', 'Completada', 'Categoria', 'Etiquetas', 'Acciones'];
-  const headerToKey = {
-    'ID': 'id',
-    'Título': 'titulo',
-    'Descripción': 'descripcion',
-    'Fecha Vencimiento': 'fecha_vencimiento',
-    'Prioridad': 'prioridad',
-    'Lote': 'lote',
-    'Completada': 'completada',
-    'Categoria': 'categoria_nombre',
-    'Etiquetas': 'etiquetas',
+    const task = item;
+    let groupOfTask;
+    if (groupBy === 'categoria') {
+      groupOfTask = task.categoria_nombre || 'Sin Categoría';
+    } else if (groupBy === 'prioridad') {
+      groupOfTask = setPrioridad(task.prioridad);
+    }
+
+    if (groupBy && collapsedGroups[groupOfTask]) {
+      return null;
+    }
+
+    return (
+      <tr key={task.id}>
+        {currentHeaders.map(header => {
+          if (header === 'Acciones') {
+            return (
+              <td key={header}>
+                <ActionButtons>
+                  <Button onClick={() => handleOpenViewModal(task)}>👁️</Button>
+                  <Button onClick={() => handleOpenModal(task)}>✏️</Button>
+                  <Button onClick={() => handleDelete(task.id)}>🗑️</Button>
+                </ActionButtons>
+              </td>
+            );
+          }
+          if (header === 'Etiquetas') {
+            return (
+              <td key={header}>
+                {task.etiquetas && task.etiquetas.split(', ').map((tag, index) => (
+                  <Chip key={index}>{tag}</Chip>
+                ))}
+              </td>
+            );
+          }
+          if (header === 'Prioridad') {
+            return <td key={header}>{setPrioridadView(task.prioridad)}</td>;
+          }
+          if (header === 'Fecha Vencimiento') {
+            return <td key={header}>{moment(task.fecha_vencimiento).format('DD/MM/YYYY')}</td>;
+          }
+          if (header === 'Completada') {
+            return <td key={header}>{task.completada ? 'SI' : 'NO'}</td>;
+          }
+          return <td key={header}>{task[headerToKey[header]]}</td>;
+        })}
+      </tr>
+    );
   };
-
-  const renderTaskRow = (task) => (
-    <tr key={task.id}>
-      <td>{task.id}</td>
-      <td>{task.titulo}</td>
-      <td>{task.descripcion}</td>
-      <td>{moment(task.fecha_vencimiento).format('DD/MM/YYYY')}</td>
-      <td>{setPrioridad(task.prioridad)}</td>
-      <td>{task.lote}</td>
-      <td>{task.completada ? 'Sí' : 'No'}</td>
-      <td>{task.categoria_nombre}</td>
-      <td>
-        {task.etiquetas && task.etiquetas.split(', ').map((tag, index) => (
-          <Chip key={index}>{tag}</Chip>
-        ))}
-      </td>
-      <td>
-        <ActionButtons>
-          <Button onClick={() => handleOpenViewModal(task)}>👁️</Button>
-          <Button onClick={() => handleOpenModal(task)}>✏️</Button>
-          <Button onClick={() => handleDelete(task.id)}>🗑️</Button>
-        </ActionButtons>
-      </td>
-    </tr>
-  );
 
   if (isLoading) return <LoadingText>Cargando tareas...</LoadingText>;
   if (error) return <ErrorText>{error}</ErrorText>;
@@ -200,7 +313,11 @@ const ListaTareas = ({ toggleSidebar }) => {
       <ActionContainer>
         <div>
           <Button onClick={() => handleOpenModal()}>╋</Button>
+          <ThemeButton onClick={() => fetchTasks()}>⟳ Refrescar</ThemeButton>
           <ThemeButton onClick={toggleSidebar}>ᯤ Filtro</ThemeButton>
+          <ThemeButton onClick={() => setGroupBy('categoria')}>🗂️ Categoria</ThemeButton>
+          <ThemeButton onClick={() => setGroupBy('prioridad')}>🗂️ Prioridad</ThemeButton>
+          {groupBy && <ThemeButton onClick={() => setGroupBy(null)}>❌</ThemeButton>}
         </div>
         <SeacrchContainer>
           <SearchInput type="text" placeholder="Buscar..." id="busqueda" value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
@@ -212,11 +329,11 @@ const ListaTareas = ({ toggleSidebar }) => {
         </div>
       </ActionContainer>
       <Table
-        headers={taskHeaders}
-        data={tasks}
-        renderRow={renderTaskRow}
+        headers={currentHeaders}
+        data={tableData}
+        renderRow={renderRow}
         itemsPerPage={100}
-        totalItems={tasks.length}
+        totalItems={tableData.length}
         headerToKey={headerToKey}
       />
 
