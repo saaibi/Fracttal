@@ -75,6 +75,7 @@ const ListaCategorias = () => {
       <h2>Categorías</h2>
       <Button onClick={() => handleOpenModal()}>╋</Button>
       <Table
+        label="Categorías"
         headers={categoryHeaders}
         data={categories}
         renderRow={renderCategoryRow}

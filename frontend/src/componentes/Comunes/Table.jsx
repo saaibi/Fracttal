@@ -10,7 +10,6 @@ const TableWrapper = styled.div`
 const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
   background-color: ${(props) => props.theme.colors.cardBackground};
   color: ${(props) => props.theme.colors.text};
 
@@ -77,7 +76,7 @@ const PageButton = styled(Button)`
   }
 `;
 
-const Table = ({ headers, data, renderRow, itemsPerPage, totalItems, headerToKey }) => {
+const Table = ({ headers, data, renderRow, itemsPerPage, totalItems, headerToKey, label}) => {
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
   const [currentPage, setCurrentPage] = useState(1);
@@ -122,6 +121,7 @@ const Table = ({ headers, data, renderRow, itemsPerPage, totalItems, headerToKey
 
   return (
     <TableWrapper>
+      <span>{label}: {totalItems}</span>
       <StyledTable>
         <thead>
           <tr>

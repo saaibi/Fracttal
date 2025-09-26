@@ -39,6 +39,7 @@ const ListaEtiquetas = () => {
       <h2>Etiquetas</h2>
       <Button onClick={handleOpenModal}>╋</Button>
       <Table
+        label="Etiquetas"
         headers={tagHeaders}
         data={tags}
         renderRow={renderTagRow}

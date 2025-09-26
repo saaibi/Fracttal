@@ -344,6 +344,7 @@ const ListaTareas = ({ toggleSidebar }) => {
         </div>
       </ActionContainer>
       <Table
+        label="Tareas"
         headers={currentHeaders}
         data={tableData}
         renderRow={renderRow}
