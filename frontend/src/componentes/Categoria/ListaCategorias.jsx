@@ -14,11 +14,23 @@ const ListaCategorias = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmAlertOpen, setIsConfirmAlertOpen] = useState(false);
   const [categoryIdToDelete, setCategoryIdToDelete] = useState(null);
-  
+  const [categoryToEdit, setCategoryToEdit] = useState(null);
+
 
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  const handleOpenModal = (category = null) => {
+    setCategoryToEdit(category);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setCategoryToEdit(null);
+    setIsModalOpen(false);
+    fetchCategories();
+  };
 
   const handleDelete = (id) => {
     setCategoryIdToDelete(id);
@@ -39,12 +51,6 @@ const ListaCategorias = () => {
     setIsConfirmAlertOpen(false);
   };
 
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    fetchCategories();
-  };
-
   const categoryHeaders = ['ID', 'Nombre', 'Acciones'];
   const headerToKey = { 'ID': 'id', 'Nombre': 'nombre' };
 
@@ -54,8 +60,8 @@ const ListaCategorias = () => {
       <td>{category.nombre}</td>
       <td>
         <ActionButtons>
+          <Button onClick={() => handleOpenModal(category)}>✏️</Button>
           <Button onClick={() => handleDelete(category.id)}>🗑️</Button>
-          {/* Add edit button */}
         </ActionButtons>
       </td>
     </tr>
@@ -67,7 +73,7 @@ const ListaCategorias = () => {
   return (
     <div>
       <h2>Categorías</h2>
-      <Button onClick={handleOpenModal}>╋</Button>
+      <Button onClick={() => handleOpenModal()}>╋</Button>
       <Table
         headers={categoryHeaders}
         data={categories}
@@ -77,8 +83,8 @@ const ListaCategorias = () => {
         headerToKey={headerToKey}
       />
 
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal} title="Crear Categoría">
-        <FormularioCategoria onSave={handleCloseModal} />
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal} title={categoryToEdit ? "Editar Categoría" : "Crear Categoría"}>
+        <FormularioCategoria onSave={handleCloseModal} initialData={categoryToEdit || {}} />
       </Modal>
 
       <ConfirmAlert

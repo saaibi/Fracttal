@@ -222,7 +222,7 @@ const ListaTareas = ({ toggleSidebar }) => {
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal} title={taskToEdit ? "Editar Tarea" : "Crear Tarea"}>
         <FormularioTarea
-          initialData={taskToEdit ? taskToEdit : {}}
+          initialData={taskToEdit || {}}
           onSave={() => {
             handleCloseModal();
             fetchTasks();

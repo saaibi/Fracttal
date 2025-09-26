@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useCategorias } from '../../hooks/useCategorias';
-import Button from '../../componentes/Comunes/Button'; 
-import FormGroup from '../../componentes/Comunes/FormGroup'; 
+import Button from '../../componentes/Comunes/Button';
+import FormGroup from '../../componentes/Comunes/FormGroup';
 import Form from '../../componentes/Comunes/Form';
 
 const FormularioCategoria = ({ initialData = {}, onSave }) => {
@@ -19,12 +19,14 @@ const FormularioCategoria = ({ initialData = {}, onSave }) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}> 
+    <Form onSubmit={handleSubmit}>
       <FormGroup>
         <label>Nombre de la Categoría:</label>
         <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
       </FormGroup>
-      <Button type="submit" disabled={isLoading}>Guardar Categoría</Button> 
+      <Button type="submit" disabled={isLoading}>
+        {initialData.id ? 'Actualizar Categoría' : 'Crear Categoría'}
+      </Button>
     </Form>
   );
 };
