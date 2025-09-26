@@ -7,7 +7,7 @@ const FormGroup = styled.div`
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
-    color: ${(props) => props.theme.colors.text};
+    color: ${({ theme }) => theme.colors.text};
   }
 
   input,
@@ -19,6 +19,10 @@ const FormGroup = styled.div`
     border-radius: 4px;
     box-sizing: border-box;
     font-family: inherit;
+    
+    option:checked {
+      background-color: ${({ theme }) => theme.colors.primary};
+    }
   }
 
   textarea {

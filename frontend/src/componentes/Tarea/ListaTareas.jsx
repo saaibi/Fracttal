@@ -19,14 +19,15 @@ const ActionContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  margin: 0;
 `;
 
 const SeacrchContainer = styled.div`
-   width: 50%;
+   width: 30%;
 `;
 
 const SearchInput = styled.input`
-  width: 90%;
+  width: 80%;
   padding: 0.8rem;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -36,7 +37,8 @@ const SearchInput = styled.input`
 
 const ThemeButton = styled(ThemeToggleButton)`
   color: ${({ theme }) => theme.colors.primary};
-   &:hover {
+
+  &:hover {
     color: ${({ theme }) => theme.colors.text};
   }
 `;
@@ -112,6 +114,43 @@ const ListaTareas = ({ toggleSidebar }) => {
     fetchTasks();
   };
 
+  const handleExportCSV = () => {
+    const headers = taskHeaders.filter(h => h !== 'Acciones');
+    const csvRows = [
+      headers.join(','),
+    ];
+
+    tasks.forEach(task => {
+      const row = headers.map(header => {
+        const key = headerToKey[header];
+        let value = task[key];
+        if (typeof value === 'string' && value.includes(',')) {
+          value = `"${value}"`;
+        }
+        return value;
+      });
+      csvRows.push(row.join(','));
+    });
+
+    const csvString = csvRows.join('\n');
+    const blob = new Blob([csvString], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'tareas.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleExportJSON = () => {
+    const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(tasks, null, 2))}`;
+    const link = document.createElement("a");
+    link.href = jsonString;
+    link.download = "tareas.json";
+    link.click();
+  };
+
   const setPrioridad = id => ({ 1: "Baja", 2: "Media", 3: "Alta", }[id] || '');
 
   const taskHeaders = ['ID', 'Título', 'Descripción', 'Fecha Vencimiento', 'Prioridad', 'Lote', 'Completada', 'Categoria', 'Etiquetas', 'Acciones'];
@@ -144,9 +183,9 @@ const ListaTareas = ({ toggleSidebar }) => {
       </td>
       <td>
         <ActionButtons>
-          <Button onClick={() => handleOpenViewModal(task)}>Ver</Button>
-          <Button onClick={() => handleOpenModal(task)}>Editar</Button>
-          <Button onClick={() => handleDelete(task.id)}>Eliminar</Button>
+          <Button onClick={() => handleOpenViewModal(task)}>👁️</Button>
+          <Button onClick={() => handleOpenModal(task)}>✏️</Button>
+          <Button onClick={() => handleDelete(task.id)}>🗑️</Button>
         </ActionButtons>
       </td>
     </tr>
@@ -159,12 +198,18 @@ const ListaTareas = ({ toggleSidebar }) => {
     <div>
       <h2>Tareas</h2>
       <ActionContainer>
-        <Button onClick={() => handleOpenModal()}>Crear Nueva Tarea</Button>
+        <div>
+          <Button onClick={() => handleOpenModal()}>╋</Button>
+          <ThemeButton onClick={toggleSidebar}>ᯤ Filtro</ThemeButton>
+        </div>
         <SeacrchContainer>
           <SearchInput type="text" placeholder="Buscar..." id="busqueda" value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
           <ThemeButton onClick={handleFilterSearch}>🔍</ThemeButton>
         </SeacrchContainer>
-        <ThemeButton onClick={toggleSidebar}>ᯤ Filtro</ThemeButton>
+        <div>
+          <ThemeButton onClick={handleExportCSV}>📥 CSV</ThemeButton>
+          <ThemeButton onClick={handleExportJSON}>💾 JSON</ThemeButton>
+        </div>
       </ActionContainer>
       <Table
         headers={taskHeaders}

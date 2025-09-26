@@ -54,7 +54,7 @@ const ListaCategorias = () => {
       <td>{category.nombre}</td>
       <td>
         <ActionButtons>
-          <Button onClick={() => handleDelete(category.id)}>Eliminar</Button>
+          <Button onClick={() => handleDelete(category.id)}>🗑️</Button>
           {/* Add edit button */}
         </ActionButtons>
       </td>
@@ -67,7 +67,7 @@ const ListaCategorias = () => {
   return (
     <div>
       <h2>Categorías</h2>
-      <Button onClick={handleOpenModal}>Crear Nueva Categoría</Button>
+      <Button onClick={handleOpenModal}>╋</Button>
       <Table
         headers={categoryHeaders}
         data={categories}

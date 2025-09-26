@@ -37,7 +37,7 @@ const ListaEtiquetas = () => {
   return (
     <div>
       <h2>Etiquetas</h2>
-      <Button onClick={handleOpenModal}>Crear Nueva Etiqueta</Button>
+      <Button onClick={handleOpenModal}>╋</Button>
       <Table
         headers={tagHeaders}
         data={tags}
