@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/useAuth';
 import Modal from '../Comunes/Modal';
 import Button from '../Comunes/Button';
 import ThemeToggleButton from '../Comunes/ThemeToggleButton';
+import Popover from '../Comunes/Popover';
 
 const HeaderContainer = styled.header`
   background-color: ${({ theme }) => theme.colors.primary};
@@ -18,6 +19,19 @@ const HeaderContainer = styled.header`
   h1 {
     margin: 0;
     font-size: 1.5rem;
+    display: block;
+
+    @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+     display: none;
+    }
+  }
+`;
+
+const NavPopover = styled(ThemeToggleButton)`
+  display: none;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+     display: block;
   }
 `;
 
@@ -25,6 +39,10 @@ const Nav = styled.nav`
   flex: 1;
   display: flex;
   justify-content: center;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    display: none;
+  }
 `;
 
 const NavLinks = styled.ul`
@@ -77,7 +95,6 @@ const HeaderActions = styled.div`
   }
 `;
 
-
 const UserInfo = styled.div`
   padding: 1rem;
   text-align: center;
@@ -100,6 +117,16 @@ const Header = ({ setTheme }) => {
 
   return (
     <HeaderContainer>
+      <Popover
+        trigger={<NavPopover>☰</NavPopover>}
+        content={({ close }) => (
+          <div>
+            <NavLink onClick={() => close()} to="/">Tareas</NavLink>
+            <NavLink onClick={() => close()} to="/categorias">Categorias</NavLink>
+            <NavLink onClick={() => close()} to="/tags">Etiquetas</NavLink>
+          </div>
+        )}
+      />
       <h1>Fracttal App</h1>
       <Nav>
         <NavLinks>

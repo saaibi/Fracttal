@@ -3,17 +3,23 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import styled from 'styled-components';
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`;
+
+const Content = styled.div`
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+`;
+
 const Main = styled.main`
   flex: 1;
   padding: 20px;
   background-color: ${(props) => props.theme.colors.cardBackground};
   overflow-y: auto;
-`;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
 `;
 
 const Backdrop = styled.div`
@@ -46,9 +52,11 @@ const Layout = ({ children, setTheme, isSidebarOpen, closeSidebar }) => {
   return (
     <Container>
       <Header setTheme={setTheme} />
-      <Backdrop isOpen={isSidebarOpen} onClick={closeSidebar} />
-      <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
-      <Main>{children}</Main>
+      <Content>
+        <Backdrop isOpen={isSidebarOpen} onClick={closeSidebar} />
+        <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
+        <Main>{children}</Main>
+      </Content>
     </Container>
   );
 };
