@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 
 const PopoverContainer = styled.div`
@@ -27,23 +27,34 @@ const PopoverContent = styled.div`
 
 const Popover = ({ trigger, content }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const popoverRef = useRef(null);
 
-   useEffect(() => {
-      const handleKeyDown = (event) => {
-        if (event.key === 'Escape') {
-          setIsOpen(false);
-        }
-      };
-      if (isOpen) {
-        document.addEventListener('keydown', handleKeyDown);
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
       }
-      return () => {
-        document.removeEventListener('keydown', handleKeyDown);
-      };
-    }, [isOpen]);
+    };
+
+    const handleClickOutside = (event) => {
+      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
 
   return (
-    <PopoverContainer>
+    <PopoverContainer ref={popoverRef}>
       {React.cloneElement(trigger, { onClick: () => setIsOpen(prev => !prev) })}
       <PopoverContent isOpen={isOpen}>
         {content({ close: () => setIsOpen(false) })}
