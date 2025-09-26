@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "YOUR_POSTMAN_COLLECTION_ID",
+		"_postman_id": "15109be7-2e6d-479c-a9de-7b265c7b80dc",
 		"name": "Fracttal App API Collection",
+		"description": "API endpoints for the Full-Stack Fracttal",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"description": "API endpoints for the Full-Stack Fracttal"
+		"_exporter_id": "41789888"
 	},
 	"item": [
 		{
@@ -21,15 +22,15 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nombre\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\"\n}"
+							"raw": "{\n    \"nombre\": \"Test User\",\n    \"email\": \"test@example2.com\",\n    \"password\": \"password123\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:3001/api/auth/registro",
-							"protocol": "http",
+							"raw": "{{protocol}}://{{host}}:{{port}}/api/auth/registro",
+							"protocol": "{{protocol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "3001",
+							"port": "{{port}}",
 							"path": [
 								"api",
 								"auth",
@@ -41,6 +42,19 @@
 				},
 				{
 					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"pm.environment.set(\"token\", responseData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -51,15 +65,15 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\"\n}"
+							"raw": "{\n    \"email\": \"saaibiflorezhernandez@gmail.com\",\n    \"password\": \"password123\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:3001/api/auth/login",
-							"protocol": "http",
+							"raw": "{{protocol}}://{{host}}:{{port}}/api/auth/login",
+							"protocol": "{{protocol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "3001",
+							"port": "{{port}}",
 							"path": [
 								"api",
 								"auth",
@@ -76,17 +90,17 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer YOUR_JWT_TOKEN",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "http://localhost:3001/api/auth/perfil",
-							"protocol": "http",
+							"raw": "{{protocol}}://{{host}}:{{port}}/api/auth/perfil",
+							"protocol": "{{protocol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "3001",
+							"port": "{{port}}",
 							"path": [
 								"api",
 								"auth",
@@ -108,17 +122,17 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer YOUR_JWT_TOKEN",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "http://localhost:3001/api/tareas?completada=false&prioridad=1",
-							"protocol": "http",
+							"raw": "{{protocol}}://{{host}}:{{port}}/api/tareas?completada=false&prioridad=1",
+							"protocol": "{{protocol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "3001",
+							"port": "{{port}}",
 							"path": [
 								"api",
 								"tareas"
@@ -148,21 +162,21 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer YOUR_JWT_TOKEN",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"titulo\": \"New Task\",\n    \"descripcion\": \"Task description\",\n    \"fecha_vencimiento\": \"2025-12-31\",\n    \"prioridad\": 2,\n    \"categoria_id\": null\n}"
+							"raw": "{\n    \"titulo\": \"New Task 2\",\n    \"descripcion\": \"Task description 2\",\n    \"fecha_vencimiento\": \"2026-12-31\",\n    \"prioridad\": 3,\n    \"lote\": \"lote1\",\n    \"categoria_id\": 101,\n    \"etiquetas\": [301,302,303,304,305,306]\n}"
 						},
 						"url": {
-							"raw": "http://localhost:3001/api/tareas",
-							"protocol": "http",
+							"raw": "{{protocol}}://{{host}}:{{port}}/api/tareas",
+							"protocol": "{{protocol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "3001",
+							"port": "{{port}}",
 							"path": [
 								"api",
 								"tareas"
@@ -182,25 +196,25 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer YOUR_JWT_TOKEN",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"titulo\": \"Updated Task\",\n    \"descripcion\": \"Updated description\",\n    \"fecha_vencimiento\": \"2025-12-31\",\n    \"prioridad\": 3,\n    \"categoria_id\": null\n}"
+							"raw": "{\n    \"titulo\": \"Updated Task\",\n    \"descripcion\": \"Updated description\",\n    \"fecha_vencimiento\": \"2025-12-31\",\n    \"prioridad\": 3,\n    \"categoria_id\": 102,\n    \"etiquetas\": [301,302]\n}"
 						},
 						"url": {
-							"raw": "http://localhost:3001/api/tareas/:id",
-							"protocol": "http",
+							"raw": "{{protocol}}://{{host}}:{{port}}/api/tareas/18",
+							"protocol": "{{protocol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "3001",
+							"port": "{{port}}",
 							"path": [
 								"api",
 								"tareas",
-								":id"
+								"18"
 							]
 						}
 					},
@@ -213,21 +227,21 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer YOUR_JWT_TOKEN",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "http://localhost:3001/api/tareas/:id",
-							"protocol": "http",
+							"raw": "{{protocol}}://{{host}}:{{port}}/api/tareas/1",
+							"protocol": "{{protocol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "3001",
+							"port": "{{port}}",
 							"path": [
 								"api",
 								"tareas",
-								":id"
+								"1"
 							]
 						}
 					},
@@ -244,7 +258,7 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer YOUR_JWT_TOKEN",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
@@ -253,17 +267,23 @@
 							"raw": "{\n    \"completada\": true\n}"
 						},
 						"url": {
-							"raw": "http://localhost:3001/api/tareas/:id/completar",
-							"protocol": "http",
+							"raw": "{{protocol}}://{{host}}:{{port}}/api/tareas/:id/completar",
+							"protocol": "{{protocol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "3001",
+							"port": "{{port}}",
 							"path": [
 								"api",
 								"tareas",
 								":id",
 								"completar"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
 							]
 						}
 					},
@@ -281,17 +301,17 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer YOUR_JWT_TOKEN",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "http://localhost:3001/api/categorias",
-							"protocol": "http",
+							"raw": "{{protocol}}://{{host}}:{{port}}/api/categorias",
+							"protocol": "{{protocol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "3001",
+							"port": "{{port}}",
 							"path": [
 								"api",
 								"categorias"
@@ -311,7 +331,7 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer YOUR_JWT_TOKEN",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
@@ -320,12 +340,12 @@
 							"raw": "{\n    \"nombre\": \"Work\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:3001/api/categorias",
-							"protocol": "http",
+							"raw": "{{protocol}}://{{host}}:{{port}}/api/categorias",
+							"protocol": "{{protocol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "3001",
+							"port": "{{port}}",
 							"path": [
 								"api",
 								"categorias"
@@ -345,7 +365,7 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer YOUR_JWT_TOKEN",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
@@ -354,16 +374,22 @@
 							"raw": "{\n    \"nombre\": \"Updated Work\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:3001/api/categorias/:id",
-							"protocol": "http",
+							"raw": "{{protocol}}://{{host}}:{{port}}/api/categorias/:id",
+							"protocol": "{{protocol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "3001",
+							"port": "{{port}}",
 							"path": [
 								"api",
 								"categorias",
 								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
 							]
 						}
 					},
@@ -376,21 +402,21 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer YOUR_JWT_TOKEN",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "http://localhost:3001/api/categorias/:id",
-							"protocol": "http",
+							"raw": "{{protocol}}://{{host}}:{{port}}/api/categorias/1",
+							"protocol": "{{protocol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "3001",
+							"port": "{{port}}",
 							"path": [
 								"api",
 								"categorias",
-								":id"
+								"1"
 							]
 						}
 					},
@@ -408,17 +434,17 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer YOUR_JWT_TOKEN",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "http://localhost:3001/api/etiquetas",
-							"protocol": "http",
+							"raw": "{{protocol}}://{{host}}:{{port}}/api/etiquetas",
+							"protocol": "{{protocol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "3001",
+							"port": "{{port}}",
 							"path": [
 								"api",
 								"etiquetas"
@@ -438,7 +464,7 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "Bearer YOUR_JWT_TOKEN",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
@@ -447,12 +473,12 @@
 							"raw": "{\n    \"nombre\": \"Urgent\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:3001/api/etiquetas",
-							"protocol": "http",
+							"raw": "{{protocol}}://{{host}}:{{port}}/api/etiquetas",
+							"protocol": "{{protocol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "3001",
+							"port": "{{port}}",
 							"path": [
 								"api",
 								"etiquetas"
@@ -460,8 +486,87 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Create Task Tag",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tarea_id\": 1,\n    \"etiqueta_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{protocol}}://{{host}}:{{port}}/api/etiquetas/tarea-etiquetas",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"etiquetas",
+								"tarea-etiquetas"
+							]
+						}
+					},
+					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "host",
+			"value": "localhost",
+			"type": "string"
+		},
+		{
+			"key": "port",
+			"value": "3001",
+			"type": "string"
+		},
+		{
+			"key": "protocol",
+			"value": "http",
+			"type": "string"
 		}
 	]
 }

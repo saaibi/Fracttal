@@ -4,12 +4,14 @@ This is a full-stack Fracttal application built with React (with Vite and Redux)
 
 ## Project Setup with Docker
 
+**Note:** It is recommended to use the latest version of Docker to ensure compatibility with the Compose specification.
+
 This project is configured to run with Docker Compose.
 
 1.  **Build and run the services:**
 
     ```bash
-    docker-compose up --build
+    docker compose up -d --build
     ```
 
 2.  **Access the application:**
@@ -20,10 +22,49 @@ This project is configured to run with Docker Compose.
 3.  **To stop the services:**
 
     ```bash
-    docker-compose down
+    docker compose down
     ```
 
 ## Manual Project Setup
+
+### Database
+
+To set up the PostgreSQL database manually, follow these steps:
+
+1.  **Install PostgreSQL:** If you don\'t have it installed, you can download it from the official website: [https://www.postgresql.org/download/](https://www.postgresql.org/download/)
+
+2.  **Create the database and user:**
+    Open the PostgreSQL interactive terminal (`psql`) and run the following commands:
+
+    ```sql
+    CREATE DATABASE fracttal_db;
+    CREATE USER fracttal_user WITH PASSWORD \'\'\'fracttal_password\'\'\';
+    GRANT ALL PRIVILEGES ON DATABASE fracttal_db TO fracttal_user;
+    ```
+
+3.  **Connect to the new database:**
+    You can connect to the database using the following command:
+
+    ```bash
+    psql -h localhost -U fracttal_user -d fracttal_db
+    ```
+
+4.  **Create the database schema and tables:**
+    Once connected to the `fracttal_db` database, run the content of the `db/database.sql` file. This will create the necessary schema and tables.
+
+    ```bash
+    \i /path/to/your/project/db/database.sql
+    ```
+    *Replace `/path/to/your/project/` with the actual absolute path to the project\'s root directory.*
+
+
+5.  **Populate the database with initial data:**
+    After creating the tables, run the content of the `db/data.sql` file to populate the database with initial data.
+
+    ```bash
+    \i /path/to/your/project/db/data.sql
+    ```
+    *Replace `/path/to/your/project/` with the actual absolute path to the project\'s root directory.*
 
 ### Backend
 
@@ -43,6 +84,7 @@ This project is configured to run with Docker Compose.
     DB_PASSWORD=fracttal_password
     DB_PORT=5432
     JWT_SECRET=supersecret
+    ALLOWED_ORIGINS=*
     ```
 4.  Start the backend server:
     ```bash
@@ -76,15 +118,54 @@ A Postman collection (`Postman_Collection.json`) has been provided in the root d
 
 ## Business Intelligence Questions
 
-The following are the business intelligence questions from the challenge, which can be answered by running SQL queries against the database.
+The following are the business intelligence questions from the challenge, which can be answered by running SQL `db/queries.sql` queries against the database. Example images are attached; this could change on the execution date.
 
-1.  **User Engagement Analysis:** What is the average number of tasks created per user in the last 30 days, and how does it compare to the previous 30 days?
-2.  **Completion Rate Trends:** What is the daily task completion rate over the last 90 days, grouped by priority level?
-3.  **Category Performance:** Which categories have the highest and lowest completion rates, and what is the average completion time for each category?
-4.  **User Productivity Patterns:** What are the peak hours and days of the week when users create more tasks, and when do they complete them?
-5.  **Overdue Task Analysis:** How many tasks are currently overdue, grouped by user and category, and what is the average number of days they are overdue?
-6.  **Tag Usage Statistics:** What are the most frequently used tags, and which tags are associated with the highest completion rates?
-7.  **User Retention Metrics:** How many users have created at least one task in each of the last 4 weeks, and what is the week-over-week retention rate?
-8.  **Priority Distribution Analysis:** What is the distribution of tasks across priority levels for active users (users who have logged in in the last 7 days)?
-9.  **Seasonal Trends:** How does task creation and completion vary by month over the last year, and there are any seasonal patterns?
-10. **Performance Benchmarking:** Which users are in the top 10% for task completion rate, and what is the average number of tasks they handle concurrently?
+### 1. Análisis de Participación de Usuarios
+**Pregunta:** ¿Cuál es el promedio de tareas creadas por usuario en los últimos 30 días, y cómo se compara con los 30 días anteriores?
+
+![alt text](Examples/image.png)
+
+### 2. Tendencias de Tasa de Completado
+**Pregunta:** ¿Cuál es la tasa de completado diaria de tareas en los últimos 90 días, agrupada por nivel de prioridad?
+
+![alt text](Examples/image-1.png)
+
+### 3. Rendimiento por Categoría
+**Pregunta:** ¿Qué categorías tienen las tasas de completado más altas y más bajas, y cuál es el tiempo promedio de completado para cada categoría?
+
+![alt text](Examples/image-2.png)
+
+### 4. Patrones de Productividad del Usuario
+**Pregunta:** ¿Cuáles son las horas pico y días de la semana cuando los usuarios crean más tareas, y cuándo las completan?
+
+![alt text](Examples/image-3.png)
+
+### 5. Análisis de Tareas Vencidas
+**Pregunta:** ¿Cuántas tareas están actualmente vencidas, agrupadas por usuario y categoría, y cuál es el promedio de días que están vencidas?
+
+![alt text](Examples/image-4.png)
+
+### 6. Estadísticas de Uso de Etiquetas
+**Pregunta:** ¿Cuáles son las etiquetas más frecuentemente utilizadas, y qué etiquetas están asociadas con las tasas de completado más altas?
+
+![alt text](Examples/image-5.png)
+
+### 7. Métricas de Retención de Usuarios
+**Pregunta:** ¿Cuántos usuarios han creado al menos una tarea en cada una de las últimas 4 semanas, y cuál es la tasa de retención semana a semana?
+
+![alt text](Examples/image-6.png)
+
+### 8. Análisis de Distribución de Prioridad
+**Pregunta:** ¿Cuál es la distribución de tareas a través de los niveles de prioridad para usuarios activos (usuarios que han iniciado sesión en los últimos 7 días)?
+
+![alt text](Examples/image-9.png)
+
+### 9. Tendencias Estacionales
+**Pregunta:** ¿Cómo varía la creación y completado de tareas por mes en el último año, y hay algún patrón estacional?
+
+![alt text](Examples/image-7.png)
+
+### 10. Benchmarking de Rendimiento
+**Pregunta:** ¿Qué usuarios están en el 10% superior por tasa de completado de tareas, y cuál es el número promedio de tareas que manejan simultáneamente?
+
+![alt text](Examples/image-8.png)
